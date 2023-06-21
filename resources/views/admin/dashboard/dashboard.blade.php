@@ -27,42 +27,7 @@
                                     <div class="card-header">
                                             <h2 class="mt-4 mx-auto">To Do List</h4>
 
-                                            <!-- <div class="row">
-                                                <div class="col-sm-3">
-                                                    <select name="category" class="form-control text-center" id="">
-                                                        <option selected disabled>---Select Category---</option>
-                                                        @foreach($categories as $category)
-                                                            <option value="{{$category->id}}">{{$category->name}}</option>
-                                                        @endforeach
 
-
-                                                    </select>
-                                                </div>
-
-                                                <div class="col-sm-3">
-                                                    <select name="date" class="form-control text-center" id="">
-                                                            <option selected disabled>---Select Date---</option>
-                                                            @foreach($dates as $item)
-                                                                <option value="{{$item->date}}">{{$item->date}}</option>
-                                                            @endforeach
-
-
-                                                        </select>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <select name="process" class="form-control text-center" id="">
-                                                            <option selected disabled>---Select Process---</option>
-                                                            <option value="0">Start</option>
-                                                            <option value="1">Pending</option>
-                                                            <option value="2">Completed</option>
-                                                            <option value="3">Due</option>
-
-                                                        </select>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <input type="submit" value="Filter" class="btn btn-success">
-                                                </div>
-                                            </div> -->
 
                                     </div>
                                     @if(session()->has('massage'))
@@ -141,42 +106,7 @@
                                     <div class="card-header">
                                             <h2 class="mt-4 mx-auto">Pending List</h4>
 
-                                            <!-- <div class="row">
-                                                <div class="col-sm-3">
-                                                    <select name="category" class="form-control text-center" id="">
-                                                        <option selected disabled>---Select Category---</option>
-                                                        @foreach($categories as $category)
-                                                            <option value="{{$category->id}}">{{$category->name}}</option>
-                                                        @endforeach
 
-
-                                                    </select>
-                                                </div>
-
-                                                <div class="col-sm-3">
-                                                    <select name="date" class="form-control text-center" id="">
-                                                            <option selected disabled>---Select Date---</option>
-                                                            @foreach($dates as $item)
-                                                                <option value="{{$item->date}}">{{$item->date}}</option>
-                                                            @endforeach
-
-
-                                                        </select>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <select name="process" class="form-control text-center" id="">
-                                                            <option selected disabled>---Select Process---</option>
-                                                            <option value="0">Start</option>
-                                                            <option value="1">Pending</option>
-                                                            <option value="2">Completed</option>
-                                                            <option value="3">Due</option>
-
-                                                        </select>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <input type="submit" value="Filter" class="btn btn-success">
-                                                </div>
-                                            </div> -->
 
                                     </div>
                                     @if(session()->has('massage'))
@@ -255,42 +185,7 @@
                                     <div class="card-header">
                                             <h2 class="mt-4 mx-auto">Completed List</h4>
 
-                                            <!-- <div class="row">
-                                                <div class="col-sm-3">
-                                                    <select name="category" class="form-control text-center" id="">
-                                                        <option selected disabled>---Select Category---</option>
-                                                        @foreach($categories as $category)
-                                                            <option value="{{$category->id}}">{{$category->name}}</option>
-                                                        @endforeach
-
-
-                                                    </select>
-                                                </div>
-
-                                                <div class="col-sm-3">
-                                                    <select name="date" class="form-control text-center" id="">
-                                                            <option selected disabled>---Select Date---</option>
-                                                            @foreach($dates as $item)
-                                                                <option value="{{$item->date}}">{{$item->date}}</option>
-                                                            @endforeach
-
-
-                                                        </select>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <select name="process" class="form-control text-center" id="">
-                                                            <option selected disabled>---Select Process---</option>
-                                                            <option value="0">Start</option>
-                                                            <option value="1">Pending</option>
-                                                            <option value="2">Completed</option>
-                                                            <option value="3">Due</option>
-
-                                                        </select>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <input type="submit" value="Filter" class="btn btn-success">
-                                                </div>
-                                            </div> -->
+                                        
 
                                     </div>
                                     @if(session()->has('massage'))

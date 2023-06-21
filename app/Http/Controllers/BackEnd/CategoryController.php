@@ -13,10 +13,12 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        return view('admin.category.manage-category',[
-            'categories' => $categories,
-        ]);
+
+        return view('admin.category.manage-category');
+    }
+
+    public function categoryData(){
+        return Category::latest()->get();
     }
 
     /**
@@ -37,7 +39,7 @@ class CategoryController extends Controller
         $category->description = $request->description;
         $category->save();
 
-        return redirect('/admin/category')->with('massage','Category Add Successfully!');
+        return 1;
     }
 
     /**
@@ -53,10 +55,7 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        $category = Category::find($id);
-        return view('admin.category.edit-category',[
-            'category' => $category,
-        ]);
+        return Category::find($id);
     }
 
     /**
@@ -64,12 +63,12 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $category = Category::findorfail($id);
+        $category = Category::find($id);
         $category->name = $request->name;
         $category->description = $request->description;
-        $category->update();
+        $category->save();
 
-        return redirect('/admin/category')->with('massage','Category Update Successfully!');
+        return 'ok';
     }
 
     /**
@@ -79,20 +78,19 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         $category->delete();
-        return redirect()->back()->with('massage','Category Delete Successfully!');
+        return 'ok';
     }
 
     public function categoryStatus($id){
         $category = Category::find($id);
-        if ($category->publication_status==1){
-            $category->publication_status=0;
-            $category->save();
-            return redirect('/admin/category')->with('massage','Publication Status UnPublic Update Successfully!');
+        if ($category->publication_status == '1'){
+            $category->publication_status = 0;
+
         }
-        else{
-            $category->publication_status=1;
-            $category->save();
-            return redirect('/admin/category')->with('massage','Publication Status Public Update Successfully!');
+        elseif($category->publication_status == '0'){
+            $category->publication_status = 1;
         }
+        $category->save();
+        return 'ok';
     }
 }

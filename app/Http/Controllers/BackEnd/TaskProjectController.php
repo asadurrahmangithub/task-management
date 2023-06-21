@@ -15,7 +15,7 @@ class TaskProjectController extends Controller
     public function index()
     {
         return view('admin.task.manage-task',[
-            'tasks' => TaskProject::all(),
+            'tasks' => TaskProject::with('category')->get(),
         ]);
     }
 

@@ -24,15 +24,14 @@ class AdminController extends Controller
         // End Filter data Function
 
         return view("admin.dashboard.dashboard",[
-            'tasks1' => TaskProject::where('process',0)->get(),
-            'tasks2' => TaskProject::where('process',1)->get(),
-            'tasks3' => TaskProject::where('process',2)->get(),
-            'categories' => Category::all(),
-            'dates' => TaskProject::all()
+            'tasks1' => TaskProject::where('process',0)->with('category')->get(),
+            'tasks2' => TaskProject::where('process',1)->with('category')->get(),
+            'tasks3' => TaskProject::where('process',2)->with('category')->get(),
+
         ]);
     }
-    
-    
+
+
     public function logout(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

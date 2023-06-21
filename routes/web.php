@@ -41,6 +41,7 @@ Route::middleware(['disableBackBtn'])->group(function () {
 
         Route::resource('category', CategoryController::class);
         Route::get('/category-status/{id}', [CategoryController::class, 'categoryStatus'])->name('category.status');
+        Route::get('/category-data', [CategoryController::class, 'categoryData'])->name('category.data');
 
         // ********************* Category All Route End ******************
 
