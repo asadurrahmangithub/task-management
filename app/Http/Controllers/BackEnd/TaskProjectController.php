@@ -15,18 +15,26 @@ class TaskProjectController extends Controller
     public function index()
     {
         return view('admin.task.manage-task',[
-            'tasks' => TaskProject::with('category')->get(),
+            'categories' => Category::all()
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        return view('admin.task.create-task',[
-            'categories' => Category::all()
-        ]);
+
+
+    // public function create()
+    // {
+    //     return view('admin.task.create-task',[
+    //         'categories' => Category::all()
+    //     ]);
+    // }
+
+
+
+    public function taskData(){
+        return TaskProject::with('category')->latest()->get();
     }
 
     /**
@@ -53,27 +61,28 @@ class TaskProjectController extends Controller
         $task->end_time = $validated['end_time'];
         $task->save();
 
-        return redirect('/admin/task')->with('massage','Task Project Add Successfully!');
+        return 'ok';
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+
+
+
+    // public function show(string $id)
+    // {
+    //     //
+    // }
+
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        $task = TaskProject::findorfail($id);
-        return view('admin.task.edit-task',[
-            'task' => $task,
-            'categories' => Category::all(),
-        ]);
+        return TaskProject::findorfail($id);
+
     }
 
     /**
@@ -81,26 +90,16 @@ class TaskProjectController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validated = $request->validate([
-            'category_id' => 'nullable',
-            'task_name' => 'required',
-            'task_description' => 'required',
-            'date' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
-
-        ]);
-
         $task = TaskProject::find($id);
 
-        $task->category_id = $validated['category_id'];
-        $task->task_name = $validated['task_name'];
-        $task->task_description = $validated['task_description'];
-        $task->date = $validated['date'];
-        $task->start_time = $validated['start_time'];
-        $task->end_time = $validated['end_time'];
+        $task->category_id = $request->category_id;
+        $task->task_name = $request->task_name;
+        $task->task_description = $request->task_description;
+        $task->date = $request->date;
+        $task->start_time = $request->start_time;
+        $task->end_time = $request->end_time;
         $task->update();
-        return redirect('/admin/task')->with('massage','Task Project Update Successfully!');
+        return 'ok';
     }
 
     /**
@@ -110,39 +109,33 @@ class TaskProjectController extends Controller
     {
         $task = TaskProject::find($id);
         $task->delete();
-        return redirect()->back()->with('massage','Task Project Delete Successfully!');
+        return 'ok';
     }
 
     public function taskStatus($id){
         $task = TaskProject::find($id);
-        if ($task->publication_status==1){
-            $task->publication_status=0;
-            $task->save();
-            return redirect('/admin/task')->with('massage','Publication Status UnPublic Update Successfully!');
+        if ($task->publication_status == 1){
+            $task->publication_status = 0;
         }
         else{
-            $task->publication_status=1;
-            $task->save();
-            return redirect('/admin/task')->with('massage','Publication Status Public Update Successfully!');
+            $task->publication_status = 1;
         }
+        $task->save();
+        return 'ok';
     }
 
     public function taskProcess($id){
         $task = TaskProject::find($id);
-        if ($task->process==0){
-            $task->process=1;
-            $task->save();
-            return redirect('/admin/task')->with('massage','Task Project Status Pending Add Successfully!');
+        if ($task->process == 0){
+            $task->process = 1;
         }
-        elseif($task->process==1){
-            $task->process=2;
-            $task->save();
-            return redirect('/admin/task')->with('massage','Task Project Status Complete Successfully!');
+        elseif($task->process == 1){
+            $task->process = 2;
         }
         else{
-            $task->process=0;
-            $task->save();
-            return redirect('/admin/task')->with('massage','Task Project Status Start Add Successfully!');
+            $task->process = 0;
         }
+        $task->save();
+        return 'ok';
     }
 }

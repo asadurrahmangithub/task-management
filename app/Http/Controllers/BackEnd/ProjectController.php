@@ -14,9 +14,9 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::all();
         return view('admin.project.manage-project',[
-            'projects' => $projects,
+            // 'project'=>Project::with('category')->get(),
+            'categories' => Category::all(),
         ]);
     }
 
@@ -36,16 +36,30 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+
+        $validated = $request->validate([
+            'category_id' => 'required',
+            'project_name' => 'required',
+            'project_description' => 'required',
+            'start_date' => 'required',
+            'submit_date' => 'required',
+
+
+        ]);
         $project = new Project();
 
-        $project->category_id = $request->category_id;
-        $project->project_name = $request->project_name;
-        $project->project_description = $request->project_description;
-        $project->start_date = $request->start_date;
-        $project->submit_date = $request->submit_date;
+        $project->category_id = $validated['category_id'];
+        $project->project_name = $validated['project_name'];
+        $project->project_description = $validated['project_description'];
+        $project->start_date = $validated['start_date'];
+        $project->submit_date = $validated['submit_date'];
 
         $project->save();
-        return redirect('/admin/project')->with('massage','Project Add Successfully!');
+        return 'ok';
+    }
+
+    public function projectDate(){
+        return Project::with('category')->latest()->get();
     }
 
     /**
@@ -59,16 +73,11 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Project $project)
+    public function edit(string $id)
     {
-        if($project != null){
-            return view('admin.project.edit-project',[
-                'project' => $project,
-                'categories' => Category::all(),
-            ]);
-        }
+        return Project::find($id);
 
-        return abort();
+
 
     }
 
@@ -86,7 +95,7 @@ class ProjectController extends Controller
         $project->submit_date = $request->submit_date;
 
         $project->update();
-        return redirect('/admin/project')->with('massage','Project Add Successfully!');
+        return 'ok';
     }
 
     /**
@@ -96,40 +105,35 @@ class ProjectController extends Controller
     {
         $project = Project::find($id);
         $project->delete();
-        return redirect()->back()->with('massage','Project Delete Successfully!');
+        return 'ok';
     }
 
     public function projectStatus($id){
         $project = Project::find($id);
-        if ($project->publication_status==1){
-            $project->publication_status=0;
-            $project->save();
-            return redirect('/admin/project')->with('massage','Publication Status UnPublic Update Successfully!');
+        if ($project->publication_status == 1){
+            $project->publication_status = 0;
         }
         else{
-            $project->publication_status=1;
-            $project->save();
-            return redirect('/admin/project')->with('massage','Publication Status Public Update Successfully!');
+            $project->publication_status = 1;
+
         }
+        $project->save();
+        return 'ok';
     }
 
     public function projectProcess($id){
         $project = Project::find($id);
-        if ($project->process==0){
-            $project->process=1;
-            $project->save();
-            return redirect('/admin/project')->with('massage','Project Status Pending Add Successfully!');
+        if ($project->process == 0){
+            $project->process = 1;
         }
-        elseif($project->process==1){
-            $project->process=2;
-            $project->save();
-            return redirect('/admin/project')->with('massage','Project Status Complete Successfully!');
+        elseif($project->process == 1){
+            $project->process = 2;
         }
         else{
-            $project->process=0;
-            $project->save();
-            return redirect('/admin/project')->with('massage','Project Status Start Add Successfully!');
+            $project->process = 0;
         }
+        $project->save();
+        return 'ok';
     }
 }
 

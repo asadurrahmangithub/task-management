@@ -51,6 +51,7 @@ Route::middleware(['disableBackBtn'])->group(function () {
         Route::resource('project', ProjectController::class);
         Route::get('/project-status/{id}', [ProjectController::class, 'projectStatus'])->name('project.status');
         Route::get('/project-process/{id}', [ProjectController::class, 'projectProcess'])->name('project.process');
+        Route::get('/project-data', [ProjectController::class, 'projectDate'])->name('project.data');
 
         // ********************* Project All Route End ******************
 
@@ -60,6 +61,7 @@ Route::middleware(['disableBackBtn'])->group(function () {
         Route::resource('task', TaskProjectController::class);
         Route::get('/task-status/{id}', [TaskProjectController::class, 'taskStatus'])->name('task.status');
         Route::get('/task-process/{id}', [TaskProjectController::class, 'taskProcess'])->name('task.process');
+        Route::get('/task-data', [TaskProjectController::class, 'taskData'])->name('task.data');
 
         // ********************* Task Project All Route End ******************
 

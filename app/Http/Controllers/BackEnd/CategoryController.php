@@ -34,9 +34,16 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+
+
+        ]);
+
         $category = new Category();
-        $category->name = $request->name;
-        $category->description = $request->description;
+        $category->name = $validated['name'];
+        $category->description = $validated['description'];
         $category->save();
 
         return 1;
@@ -45,10 +52,11 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+    
+    // public function show(string $id)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.

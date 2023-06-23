@@ -63,7 +63,7 @@
 
                         <!-- Modal Add Category-->
                         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+                            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
@@ -85,6 +85,7 @@
                                                                 <label for="name" class="col-sm-4 col-form-label">Category Name</label>
                                                                 <div class="col-sm-8">
                                                                     <input class="form-control" type="text" placeholder="Enter Your Category Name" id="name">
+                                                                    <span id="error" class="text-danger"></span>
 
                                                                 </div>
                                                             </div>
@@ -92,7 +93,10 @@
                                                             <div class="row mb-3">
                                                                 <label for="description" class="col-sm-4 col-form-label">Note</label>
                                                                 <div class="col-sm-8">
+
                                                                     <textarea id="description" class="form-control" cols="30" rows="4"></textarea>
+                                                                    <span id="error" class="text-danger"></span>
+
                                                                 </div>
                                                             </div>
 
@@ -121,7 +125,7 @@
 
                         <!-- Modal Edit Category-->
                         <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+                            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
@@ -385,7 +389,7 @@
             })
 
 
-    })
+        })
 
 </script>
 

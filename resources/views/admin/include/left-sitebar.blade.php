@@ -35,7 +35,7 @@
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{route('category.index')}}">Manage Category</a></li>
-                                    <li><a href="{{route('category.create')}}">Add Category</a></li>
+                                    {{-- <li><a href="{{route('category.create')}}">Add Category</a></li> --}}
 
                                 </ul>
                             </li>
@@ -47,7 +47,7 @@
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{route('project.index')}}">Manage Project</a></li>
-                                    <li><a href="{{route('project.create')}}">Add Project</a></li>
+                                    {{-- <li><a href="{{route('project.create')}}">Add Project</a></li> --}}
 
                                 </ul>
                             </li>
@@ -61,7 +61,7 @@
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{route('task.index')}}">Manage Task</a></li>
-                                    <li><a href="{{route('task.create')}}">Add Task</a></li>
+                                    {{-- <li><a href="{{route('task.create')}}">Add Task</a></li> --}}
 
 
 
