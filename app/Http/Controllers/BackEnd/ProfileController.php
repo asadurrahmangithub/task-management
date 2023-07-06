@@ -5,6 +5,7 @@ namespace App\Http\Controllers\BackEnd;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProfileRequest;
 
 class ProfileController extends Controller
 {
@@ -30,19 +31,16 @@ class ProfileController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProfileRequest $request)
     {
 
-        $validated = $request->validate([
-            'name' => 'required',
-            'image' => 'nullable',
-        ]);
+        $validatedData = $request->validated();
 
         $profile = Profile::first();
 
         if($profile){
 
-            $profile->name = $validated['name'];
+            $profile->name = $validatedData['name'];
             if ($request->file('image')) {
                 if (file_exists($profile->image)) {
                     unlink($profile->image);
@@ -54,13 +52,16 @@ class ProfileController extends Controller
         }
         else{
             $profile = new Profile();
-            $profile->name = $validated['name'];
+            $profile->name = $validatedData['name'];
             $profile->image = $this->image($request);
         }
         $profile->save();
-        return response()->json([
-            'status' => 200,
-        ]);
+
+        return back();
+
+        // return response()->json([
+        //     'status' => 200,
+        // ]);
     }
 
 
