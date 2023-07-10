@@ -9,6 +9,7 @@ use App\Http\Controllers\BackEnd\ProjectController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\BackEnd\TaskProjectController;
+use App\Http\Controllers\BackEnd\BlogController;
 use App\Http\Controllers\TestController;
 
 
@@ -68,6 +69,13 @@ Route::middleware(['disableBackBtn'])->group(function () {
 
         // ********************* Profile All Route Start ******************
         Route::resource('profile', ProfileController::class);
+        // ********************* Profile All Route End ******************
+
+
+        // ********************* Profile All Route Start ******************
+        Route::resource('blog', BlogController::class);
+        Route::get('/blog-status/{id}', [BlogController::class, 'blogStatus'])->name('blog.status');
+        Route::get('/blog-process/{id}', [BlogController::class, 'blogProcess'])->name('blog.process');
         // ********************* Profile All Route End ******************
 
 

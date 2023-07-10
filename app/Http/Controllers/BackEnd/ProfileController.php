@@ -15,9 +15,7 @@ class ProfileController extends Controller
     public function index()
     {
 
-        return view("admin.profile.profile",[
-            'profile' => Profile::first(),
-        ]);
+
     }
 
     /**
@@ -25,7 +23,9 @@ class ProfileController extends Controller
      */
     public function create()
     {
-        //
+        return view("admin.profile.profile",[
+            'profile' => Profile::first(),
+        ]);
     }
 
     /**
@@ -57,11 +57,11 @@ class ProfileController extends Controller
         }
         $profile->save();
 
-        return back();
+        // return back();
 
-        // return response()->json([
-        //     'status' => 200,
-        // ]);
+        return response()->json([
+            'status' => 200,
+        ]);
     }
 
 

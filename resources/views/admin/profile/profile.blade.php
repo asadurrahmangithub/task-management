@@ -33,7 +33,7 @@
 
 
 
-                        <form action="#" method="POST" enctype="multipart/form-data" id="profileUpload">
+                        <form method="POST" enctype="multipart/form-data" id="profileUpload" >
                             @csrf
                             <div class="row mb-3">
                                 <label for="example-text-input" class="col-sm-2 col-form-label">Name</label>
@@ -71,6 +71,8 @@
                                     {{-- <input class="btn btn-success" type="submit" value="Submit" id="submit_button"> --}}
                                 </div>
                             </div>
+
+                        </form>
                 </div>
 
 
@@ -90,36 +92,35 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 
-    {{-- <script>
- $(function(){
-    // add new employee ajax request
-    $("#profileUpload").submit(function(e) {
-        e.preventDefault();
-        const fd = new FormData(this);
-        $("#profileSubmit").text('Profile Update...');
-        $.ajax({
-          url: '{{ route('profile.store') }}',
-          method: 'post',
-          data: fd,
-          cache: false,
-          contentType: false,
-          processData: false,
-          dataType: 'json',
-          success: function(response) {
-            if (response.status == 200) {
-              Swal.fire(
-                'Update!',
-                'Profile Added Successfully!',
-                'success'
-              )
-            }
+    <script>
+        $(function() {
+            // add new employee ajax request
+            $("#profileUpload").submit(function(e) {
+                e.preventDefault();
+                const fd = new FormData(this);
+                $("#profileSubmit").text('Profile Update...');
+                $.ajax({
+                    url: '{{ route('profile.store') }}',
+                    method: 'post',
+                    data: fd,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status == 200) {
+                            Swal.fire(
+                                'Update!',
+                                'Profile Added Successfully!',
+                                'success'
+                            )
+                        }
 
-          }
+                    }
+                });
+            });
         });
-      });
- });
-
-</script> --}}
+    </script>
 
     {{-- <script>
         function sendRequest(method, url, data) {
@@ -156,10 +157,10 @@
 
 
 
-    <script>
+    {{-- <script>
         async function sendDataInfo(data) {
 
-            const fd = new FormData(this.data);
+            const fd = new FormData(document.getElementById("profileUpload"));
             await fetch({{ route('profile.store') }}, {
 
                 method: "POST",
@@ -180,5 +181,42 @@
             name: document.getElementById("name").value,
             image: document.getElementById("image").value
         }
-    </script>
+    </script> --}}
+
+
+    {{-- <script>
+        function verify_code(event) {
+            event.preventDefault();
+            let formData = new FormData(document.getElementById("profileUpload"));
+            let token = document.head.querySelector("meta[name='csrf-token']")
+
+            let _data = {
+                form_data: formData,
+                _token: token.content
+            }
+
+            const options = {
+                method: "POST",
+                body: JSON.stringify(_data),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }
+
+            fetch({{ route('profile.store') }}, options)
+                .then(function(response) {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Error: ' + response.status);
+                })
+                .then(function(data) {
+
+                })
+                .catch(function(error) {
+                    // Handle the error
+                    console.log(error);
+                });
+        }
+    </script> --}}
 @endsection
