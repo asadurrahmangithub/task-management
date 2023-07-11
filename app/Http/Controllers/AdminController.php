@@ -2,14 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
-use App\Models\TaskProject;
+use App\Models\User;
 use App\Models\Category;
+use App\Models\TaskProject;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+
+    public function create(){
+        return view("admin.user.user");
+    }
+    public function allUser(){
+
+        return User::where('role','admin')->latest()->get();
+
+    }
+    public function userStore(Request $request){
+        $validated = $request->validate([
+            'name' => 'required',
+            'username' => 'required',
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => 'required',
+
+        ]);
+        User::create([
+            'name' => $validated['name'],
+            'username' => $validated['username'],
+            'email' => $validated['email'],
+            'role' => 'admin',
+            'password' => Hash::make($request->password),
+        ]);
+        return response()->json([
+            "status" => 200,
+        ]);
+    }
+    public function deleteUser($id){
+        $user = User::findorfail($id);
+        $user->delete();
+        return response()->json([
+            "status" => 200,
+        ]);
+    }
     public function index(Request $request){
 
         // Filter data Function
@@ -24,9 +61,7 @@ class AdminController extends Controller
         // End Filter data Function
 
         return view("admin.dashboard.dashboard",[
-            'tasks1' => TaskProject::where('process',0)->with('category')->get(),
-            'tasks2' => TaskProject::where('process',1)->with('category')->get(),
-            'tasks3' => TaskProject::where('process',2)->with('category')->get(),
+            'tasks' => TaskProject::with('category')->get(),
 
         ]);
     }

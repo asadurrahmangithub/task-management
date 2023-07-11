@@ -10,6 +10,7 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\BackEnd\TaskProjectController;
 use App\Http\Controllers\BackEnd\BlogController;
+use App\Http\Controllers\BackEnd\RoleController;
 use App\Http\Controllers\TestController;
 
 
@@ -35,35 +36,33 @@ Route::middleware(['disableBackBtn'])->group(function () {
 
         Route::controller(AdminController::class)->group(function () {
             Route::get('/dashboard', 'index')->name('admin.dashboard');
+            Route::get('/user', 'create')->name('admin.user');
+            Route::get('/all-usser', 'allUser')->name('admin.all.user');
+            Route::post('/user/store', 'userStore')->name('user.store');
+            Route::delete('/user/{id}', 'deleteUser')->name('delete.user');
             Route::get('/logout', 'logout')->name('admin.logout');
         });
 
         // ********************* Category All Route Start ******************
-
         Route::resource('category', CategoryController::class);
         Route::get('/category-status/{id}', [CategoryController::class, 'categoryStatus'])->name('category.status');
         Route::get('/category-data', [CategoryController::class, 'categoryData'])->name('category.data');
-
         // ********************* Category All Route End ******************
 
 
         // ********************* Project All Route Start ******************
-
         Route::resource('project', ProjectController::class);
         Route::get('/project-status/{id}', [ProjectController::class, 'projectStatus'])->name('project.status');
         Route::get('/project-process/{id}', [ProjectController::class, 'projectProcess'])->name('project.process');
         Route::get('/project-data', [ProjectController::class, 'projectDate'])->name('project.data');
-
         // ********************* Project All Route End ******************
 
 
         // ********************* Task Project All Route Start ******************
-
         Route::resource('task', TaskProjectController::class);
         Route::get('/task-status/{id}', [TaskProjectController::class, 'taskStatus'])->name('task.status');
         Route::get('/task-process/{id}', [TaskProjectController::class, 'taskProcess'])->name('task.process');
         Route::get('/task-data', [TaskProjectController::class, 'taskData'])->name('task.data');
-
         // ********************* Task Project All Route End ******************
 
 
@@ -72,11 +71,16 @@ Route::middleware(['disableBackBtn'])->group(function () {
         // ********************* Profile All Route End ******************
 
 
-        // ********************* Profile All Route Start ******************
+        // ********************* Blog All Route Start ******************
         Route::resource('blog', BlogController::class);
         Route::get('/blog-status/{id}', [BlogController::class, 'blogStatus'])->name('blog.status');
         Route::get('/blog-process/{id}', [BlogController::class, 'blogProcess'])->name('blog.process');
-        // ********************* Profile All Route End ******************
+        // ********************* Blog All Route End ******************
+
+
+        // ********************* Role And Permission All Route Start ******************
+        Route::resource('role', RoleController::class);
+        // ********************* Role And Permission All Route End ******************
 
 
 

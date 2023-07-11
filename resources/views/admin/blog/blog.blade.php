@@ -68,7 +68,7 @@
 
 
 
-    <!-- Modal Add Task Project-->
+    <!-- Modal Add Blog Information-->
     <div class="modal fade " id="addBlogModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
         style="width: 100%">
         <div class="modal-dialog modal-dialog-centered modal-fullscreen-lg-down modal-lg">
@@ -187,7 +187,7 @@
 
 
 
-    <!-- Modal Edit Task Project-->
+    <!-- Modal Edit Blog Information -->
     <div class="modal fade " id="updateBlogModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
         style="width: 100%">
         <div class="modal-dialog modal-dialog-centered modal-fullscreen-lg-down modal-lg">

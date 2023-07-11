@@ -1,3 +1,24 @@
+@php
+    $id = Auth::user()->id;
+
+    // $admin = App\Models\User::where('status','active')->where('role','admin')->where('username','admin')->find($id);
+    // $developer = App\Models\User::where('status','active')->where('role','admin')->where('username','developer')->find($id);
+    $user = App\Models\User::where([['id', $id],['status', 'active']])
+        ->first();
+    // dd($user);
+
+    $role = 'user';
+    $status = false;
+    $username = '';
+    if ($user != null) {
+        $status = $user->status;
+        $role = $user->role;
+        $username = $user->username;
+
+    }
+@endphp
+
+
 <div data-simplebar class="h-100">
 
     <!-- User details -->
@@ -16,72 +37,118 @@
     <div id="sidebar-menu">
         <!-- Left Menu Start -->
         <ul class="metismenu list-unstyled" id="side-menu">
-            <li class="menu-title">Menu</li>
-
-            <li>
-                <a href="{{ route('admin.dashboard') }}" class="waves-effect">
-                    <i class="ri-dashboard-line"></i><span class="badge rounded-pill bg-success float-end"></span>
-                    <span>Dashboard</span>
-                </a>
-            </li>
 
 
+            @if ($username == 'admin' || $username == 'developer')
+                <li class="menu-title">Menu</li>
 
-            <li class="menu-title">Pages</li>
-
-            <li>
-                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                    <i class="ri-account-circle-line"></i>
-                    <span>Category</span>
-                </a>
-                <ul class="sub-menu" aria-expanded="false">
-                    <li><a href="{{ route('category.index') }}">Manage Category</a></li>
-                    {{-- <li><a href="{{route('category.create')}}">Add Category</a></li> --}}
-
-                </ul>
-            </li>
-
-            <li>
-                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                    <i class="ri-profile-line"></i>
-                    <span>Project</span>
-                </a>
-                <ul class="sub-menu" aria-expanded="false">
-                    <li><a href="{{ route('project.index') }}">Manage Project</a></li>
-                    {{-- <li><a href="{{route('project.create')}}">Add Project</a></li> --}}
-
-                </ul>
-            </li>
-
-            <li class="menu-title">Task Project</li>
-
-            <li>
-                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                    <i class="ri-pencil-ruler-2-line"></i>
-                    <span>All Task</span>
-                </a>
-                <ul class="sub-menu" aria-expanded="false">
-                    <li><a href="{{ route('task.index') }}">Manage Task</a></li>
-                    {{-- <li><a href="{{route('task.create')}}">Add Task</a></li> --}}
+                <li>
+                    <a href="{{ route('admin.dashboard') }}" class="waves-effect">
+                        <i class="ri-dashboard-line"></i><span class="badge rounded-pill bg-success float-end"></span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+            @endif
 
 
+            @if ($username == 'admin')
+                <li class="menu-title">Pages</li>
 
-                </ul>
-            </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-account-circle-line"></i>
+                        <span>Category</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('category.index') }}">Manage Category</a></li>
+                        {{-- <li><a href="{{route('category.create')}}">Add Category</a></li> --}}
 
-            <li>
-                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                    <i class="ri-vip-crown-2-line"></i>
-                    <span>Blog Page</span>
-                </a>
-                <ul class="sub-menu" aria-expanded="false">
-                    <li><a href="{{ route('blog.create') }}">All Blog</a></li>
+                    </ul>
+                </li>
+            @endif
 
-                </ul>
-            </li>
+            @if ($username == 'admin')
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-profile-line"></i>
+                        <span>Project</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('project.index') }}">Manage Project</a></li>
+                        {{-- <li><a href="{{route('project.create')}}">Add Project</a></li> --}}
+
+                    </ul>
+                </li>
+            @endif
 
 
-            <!--  <li>
+            @if ($username == 'admin')
+                <li class="menu-title">Task Project</li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-pencil-ruler-2-line"></i>
+                        <span>All Task</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('task.index') }}">Manage Task</a></li>
+                        {{-- <li><a href="{{route('task.create')}}">Add Task</a></li> --}}
+
+
+
+                    </ul>
+                </li>
+            @endif
+
+
+            @if ($username == 'admin' || $username == 'user')
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-vip-crown-2-line"></i>
+                        <span>Blog Page</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('blog.create') }}">All Blog</a></li>
+
+                    </ul>
+                </li>
+            @endif
+
+            @if ($username == 'admin')
+                <li class="menu-title">Role & Permission</li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-bar-chart-line"></i>
+                        <span>All Role</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('role.create') }}">Manage Role</a></li>
+
+                    </ul>
+                </li>
+            @endif
+
+
+
+            @if ($username == 'admin' || $username == 'developer')
+                <li class="menu-title">Admin User</li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-table-2"></i>
+                        <span>
+                            All Admin
+                        </span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('admin.user') }}">Manage Admin</a></li>
+
+                    </ul>
+                </li>
+            @endif
+
+
+            <!-- <li>
                                 <a href="javascript: void(0);" class="waves-effect">
                                     <i class="ri-eraser-fill"></i>
                                     <span class="badge rounded-pill bg-danger float-end">8</span>
@@ -112,21 +179,9 @@
                                 </ul>
                             </li>
 
-                            <li>
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="ri-bar-chart-line"></i>
-                                    <span>Charts</span>
-                                </a>
-                                <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="charts-apex.html">Apex Charts</a></li>
-                                    <li><a href="charts-chartjs.html">Chartjs Charts</a></li>
-                                    <li><a href="charts-flot.html">Flot Charts</a></li>
-                                    <li><a href="charts-knob.html">Jquery Knob Charts</a></li>
-                                    <li><a href="charts-sparkline.html">Sparkline Charts</a></li>
-                                </ul>
-                            </li>
 
-                            <li>
+
+                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="ri-brush-line"></i>
                                     <span>Icons</span>

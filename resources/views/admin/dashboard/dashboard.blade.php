@@ -1,3 +1,27 @@
+@php
+
+
+    // $tasks2[] = '';
+    // $tasks3[] = '';
+
+    if ($tasks != null) {
+        foreach ($tasks as $key => $task) {
+            if ($task->process == '0') {
+                $tasks1[] = $task;
+                // dd($tasks1);
+            }
+            if ($task->process == '1') {
+                $tasks2[] = $task;
+            }
+            if ($task->process == '2') {
+                $tasks3[] = $task;
+            }
+        }
+
+    }
+
+@endphp
+
 @extends('admin.master')
 
 @section('content')
@@ -58,6 +82,9 @@
 
                             @php $i=1; @endphp
                             @foreach ($tasks1 as $task)
+
+                            {{-- @php dd($tasks1); @endphp --}}
+
                                 <tr>
                                     <td>{{ $i }}</td>
                                     <td>{{ $task->task_name }}</td>
