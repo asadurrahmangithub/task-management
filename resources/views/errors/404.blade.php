@@ -20,7 +20,7 @@
                                     <h1 class="text-danger" style="font-size: 100px; padding-top: 20px">404!</h1>
                                     <h3 class="text-danger">Sorry, page not found</h3><br>
 
-                                    <a class="btn btn-info mb-5 waves-effect waves-light" href="{{ route('admin.dashboard') }}">Back Dashboard</a>
+                                    <button class="btn btn-info mb-5 waves-effect waves-light" onclick="history.back()"> GO BACK</button>
                                 </div>
                             </div>
                         </div>

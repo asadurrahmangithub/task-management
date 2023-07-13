@@ -41,13 +41,15 @@ class AdminController extends Controller
         ]);
     }
     public function deleteUser($id){
+
+
         $user = User::findorfail($id);
         $user->delete();
         return response()->json([
             "status" => 200,
         ]);
     }
-    public function index(Request $request){
+    public function index(){
 
         // Filter data Function
 
@@ -69,11 +71,24 @@ class AdminController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
+
+        // Session Out Start
+        session_start();
+        unset($_SESSION['id']);
+
+        if (isset($_COOKIE["user_email"]) && isset($_COOKIE["user_password"])){
+            setcookie("user_password", '', time() - (3600));
+            setcookie("user_password", '', time() - (3600));
+        }
+        // Session Out End
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
+
+
 
         return redirect('/login');
     }

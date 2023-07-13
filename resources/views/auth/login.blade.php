@@ -21,20 +21,20 @@
 
         <div class="form-group mb-3 row">
             <div class="col-12">
-                <input class="form-control" id="email" name="email" type="text" required="" placeholder="Username">
+                <input class="form-control" value="@php if (isset($_COOKIE["user_email"])){echo $_COOKIE["user_email"];} @endphp" id="email" name="email" type="text" required="" placeholder="Username">
             </div>
         </div>
 
         <div class="form-group mb-3 row">
             <div class="col-12">
-                <input class="form-control" id="password" name="password" type="password" required="" placeholder="Password">
+                <input class="form-control" value="@php if (isset($_COOKIE["user_password"])){echo $_COOKIE["user_password"];} @endphp" id="password" name="password" type="password" required="" placeholder="Password">
             </div>
         </div>
 
         <div class="form-group mb-3 row">
             <div class="col-12">
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" name="remember" class="custom-control-input" id="remember_me">
+                    <input type="checkbox" name="remember" @php if (isset($_COOKIE["user_email"]) && isset($_COOKIE["user_password"])){ echo "checked";} @endphp class="custom-control-input" id="remember_me">
                     <label class="form-label ms-1" for="remember_me">Remember me</label>
                 </div>
             </div>

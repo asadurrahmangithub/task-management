@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+
 use App\Models\Profile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,7 +23,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // $id = Auth::user()->id;
+        // $user = User::where([['id', 12],['status', 'active']])->first();
+        // $username = $user->username;
+
         $profile = Profile::first();
         view()->share('profile', $profile);
+        // view()->share('username', $username);
     }
+
+
 }

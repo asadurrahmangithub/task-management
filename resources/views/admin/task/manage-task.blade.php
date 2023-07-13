@@ -1,3 +1,7 @@
+@if ($username == 'admin' || $username == 'developer')
+
+
+
 @extends('admin.master')
 
 @section('content')
@@ -333,7 +337,7 @@
                 rows = rows + '<a class="btn btn-danger text-light"  id="deleteRow" data-id="' + value.id +
                     '" >Delete</a> ';
                 rows = rows + '</td>';
-                
+
                 rows = rows + '</tr>';
             });
             $("#tbody").html(rows);
@@ -555,3 +559,5 @@
         })
     </script>
 @endsection
+
+@endif

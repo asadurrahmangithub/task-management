@@ -277,7 +277,8 @@
                     $('#email').val('');
                     $('#password').val('');
                     $('#adminModal').modal('toggle');
-                    Swal.fire({
+                    if(response.status == 200){
+                        Swal.fire({
                         position: 'top-end',
                         icon: 'success',
                         title: 'Success...',
@@ -285,6 +286,8 @@
                         showConfirmButton: false,
                         timer: 1500
                     })
+                    }
+
 
                 })
                 .catch(function(error) {

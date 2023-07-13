@@ -1,22 +1,4 @@
-@php
-    $id = Auth::user()->id;
 
-    // $admin = App\Models\User::where('status','active')->where('role','admin')->where('username','admin')->find($id);
-    // $developer = App\Models\User::where('status','active')->where('role','admin')->where('username','developer')->find($id);
-    $user = App\Models\User::where([['id', $id],['status', 'active']])
-        ->first();
-    // dd($user);
-
-    $role = 'user';
-    $status = false;
-    $username = '';
-    if ($user != null) {
-        $status = $user->status;
-        $role = $user->role;
-        $username = $user->username;
-
-    }
-@endphp
 
 
 <div data-simplebar class="h-100">
@@ -39,7 +21,7 @@
         <ul class="metismenu list-unstyled" id="side-menu">
 
 
-            @if ($username == 'admin' || $username == 'developer')
+            {{-- @if ($username == 'admin' || $username == 'developer') --}}
                 <li class="menu-title">Menu</li>
 
                 <li>
@@ -48,7 +30,7 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-            @endif
+            {{-- @endif --}}
 
 
             @if ($username == 'admin')

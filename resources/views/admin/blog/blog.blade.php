@@ -49,7 +49,9 @@
                                 <th>Image</th>
                                 <th>Author</th>
                                 <th>Process</th>
-                                <th>Status</th>
+                                @if ($username == 'admin' || $username == 'developer')
+                                    <th>Status</th>
+                                @endif
                                 <th>Action</th>
 
                             </tr>
@@ -341,24 +343,41 @@
 
                 rows = rows + '</td>';
 
+                @if ($username == 'admin' || $username == 'developer')
+                    rows = rows + '<td data-id="' + value.id + '" class="text-center">';
+                    if (value.publication_status == 1) {
+                        rows = rows + '<a class="btn btn-success text-light status" title="UnPublich" data-id="' +
+                            value
+                            .id + '" >Publich</a> ';
+                    } else {
+                        rows = rows + '<a class="btn btn-warning text-light status"  title="Publich" data-id="' +
+                            value
+                            .id + '" >UnPublich</a> ';
+                    }
+                    rows = rows + '</td>';
+                @endif
+
 
                 rows = rows + '<td data-id="' + value.id + '" class="text-center">';
-                if (value.publication_status == 0) {
-                    rows = rows + '<a class="btn btn-success text-light status" title="UnPublich" data-id="' + value
-                        .id + '" >Publich</a> ';
-                } else {
-                    rows = rows + '<a class="btn btn-warning text-light status"  title="Publich" data-id="' + value
-                        .id + '" >UnPublich</a> ';
-                }
+                @if ($username == 'admin')
+                    rows = rows + '<a class="btn btn-info text-light" id="editBlogInfo" data-id="' + value.id +
+                        '" data-bs-toggle="modal" data-bs-target="#updateBlogModal">Edit</a> ';
+                    rows = rows + '<a class="btn btn-danger text-light"  id="deleteRow" data-id="' + value.id +
+                        '" >Delete</a> ';
+                @elseif ($username == 'user')
+
+                    if (value.publication_status == 0) {
+                        rows = rows + '<a class="btn btn-info text-light" id="editBlogInfo" data-id="' + value.id +
+                            '" data-bs-toggle="modal" data-bs-target="#updateBlogModal">Edit</a> ';
+                        rows = rows + '<a class="btn btn-danger text-light"  id="deleteRow" data-id="' + value.id +
+                            '" >Delete</a> ';
+                    } else {
+                        rows = rows + '<a class="btn btn-warning text-light">No Action</a> ';
+                    }
+                @endif
+
                 rows = rows + '</td>';
 
-
-                rows = rows + '<td data-id="' + value.id + '" class="text-center">';
-                rows = rows + '<a class="btn btn-info text-light" id="editBlogInfo" data-id="' + value.id +
-                    '" data-bs-toggle="modal" data-bs-target="#updateBlogModal">Edit</a> ';
-                rows = rows + '<a class="btn btn-danger text-light"  id="deleteRow" data-id="' + value.id +
-                    '" >Delete</a> ';
-                rows = rows + '</td>';
 
 
                 rows = rows + '</tr>';
