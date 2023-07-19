@@ -8,6 +8,8 @@ use App\Models\Profile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
+use Illuminate\Pagination\Paginator;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -29,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
 
         $profile = Profile::first();
         view()->share('profile', $profile);
+        Paginator::useBootstrap();
         // view()->share('username', $username);
     }
 

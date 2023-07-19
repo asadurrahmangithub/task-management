@@ -55,7 +55,7 @@ session_regenerate_id(true);
             <div class="main-content">
 
                 <div class="page-content">
-                    <div class="container-fluid">
+                    <div class="container-fluid" id="pageLoadData">
 
                         @yield('content')
                     </div>

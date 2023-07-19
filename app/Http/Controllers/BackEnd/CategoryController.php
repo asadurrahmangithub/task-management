@@ -13,13 +13,14 @@ class CategoryController extends Controller
      */
     public function index()
     {
-
-        return view('admin.category.manage-category');
+        $categories = Category::latest()->paginate(3);
+        return view('admin.category.manage-category',compact('categories'));
     }
 
-    public function categoryData(){
-        return Category::latest()->get();
-    }
+    // public function categoryData(){
+    //     return Category::latest()->limit(3)->get();
+    // }
+
 
     /**
      * Show the form for creating a new resource.
@@ -46,17 +47,20 @@ class CategoryController extends Controller
         $category->description = $validated['description'];
         $category->save();
 
-        return 1;
+        return response()->json([
+            "status" => 200
+        ]);
     }
 
     /**
      * Display the specified resource.
      */
-    
-    // public function show(string $id)
-    // {
-    //     //
-    // }
+
+    public function show()
+    {
+        $categories = Category::latest()->paginate(3);
+        return view('admin.category.pagination',compact('categories'))->render();
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -76,7 +80,9 @@ class CategoryController extends Controller
         $category->description = $request->description;
         $category->save();
 
-        return 'ok';
+        return response()->json([
+            "status" => 200,
+        ]);
     }
 
     /**
@@ -86,7 +92,9 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         $category->delete();
-        return 'ok';
+        return response()->json([
+            "status" => 200
+        ]);
     }
 
     public function categoryStatus($id){
@@ -99,6 +107,25 @@ class CategoryController extends Controller
             $category->publication_status = 1;
         }
         $category->save();
-        return 'ok';
+        return response()->json([
+            "status" => 200,
+        ]);
+    }
+
+    /******************** Category Data Search  ***************************/
+
+    public function categorySearch(Request $request){
+        $categories = Category::where('name','like','%'.$request->search_string.'%')
+        ->orWhere('description','like','%'.$request->search_string.'%')
+        ->orderBy('id','desc')
+        ->paginate(3);
+
+        if($categories->count() >= 1){
+            return view('admin.category.pagination',compact('categories'))->render();
+        }else{
+            return response()->json([
+                "status" => "no_data",
+            ]);
+        }
     }
 }

@@ -42,3 +42,25 @@
 
 
 @yield('js')
+
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
+<script>
+    function dashboardButton(){
+        event.preventDefault();
+        const CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+        $.ajax({
+            url: "/admin/dashboard",
+            type: 'get',
+            data:{
+                CSRF_TOKEN
+            },
+            success: function(data){
+                // console.log(data);
+
+               $('#pageLoadData').html(data);
+
+            }
+        })
+    }
+</script> --}}

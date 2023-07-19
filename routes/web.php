@@ -46,7 +46,9 @@ Route::middleware(['disableBackBtn'])->group(function () {
         // ********************* Category All Route Start ******************
         Route::resource('category', CategoryController::class);
         Route::get('/category-status/{id}', [CategoryController::class, 'categoryStatus'])->name('category.status');
-        Route::get('/category-data', [CategoryController::class, 'categoryData'])->name('category.data');
+        Route::get('/category-search', [CategoryController::class, 'categorySearch'])->name('category.search');
+        // Route::get('/category-data', [CategoryController::class, 'categoryData'])->name('category.data');
+        Route::get('/category/pagination/{id}', [CategoryController::class, 'show'])->name('category.data');
         // ********************* Category All Route End ******************
 
 

@@ -24,22 +24,30 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="mt-4">Category Manage Table</h4>
-                        <button type="button" class="btn btn-success float-end" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Add Category
-                        </button>
-                </div>
-                @if (session()->has('massage'))
-                    <div class="alert alert-primary text-success text-center">
-                        <h2 class="text-success">{{ session()->get('massage') }}</h2>
-                    </div>
-                @endif
-                <div class="card-body">
 
-                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h2 class="mt-4">Category Manage Table</h2>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control mt-4" name="search" id="searchCategory"
+                                placeholder="Search Here........">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-success mt-4 float-end" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                                Add Category
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="card-body table-data">
+
+                    <table class="table table-bordered dt-responsive nowrap"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                        <thead>
+                        <thead class="text-center">
                             <tr>
                                 <th>SL No</th>
                                 <th>Catagory Name</th>
@@ -51,11 +59,40 @@
                         </thead>
 
 
-                        <tbody id="tbody">
+                        <tbody id="tbody" class="text-center">
+
+                            @foreach ($categories as $key => $category)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $category->name }}</td>
+                                    <td>{{ $category->description }}</td>
+                                    <td>
+
+                                        @if ($category->publication_status == 1)
+                                            <a class="btn btn-success text-light status" data-id="{{ $category->id }}"
+                                                title="UnPublich">Publich</a>
+                                        @else
+                                            <a class="btn btn-warning text-light status" data-id="{{ $category->id }}"
+                                                title="Publich">UnPublich</a>
+                                        @endif
+
+                                    </td>
+                                    <td>
+
+                                        <a class="btn btn-info text-light" id="editCategory" data-id="{{ $category->id }}"
+                                            data-bs-toggle="modal" data-bs-target="#editCategoryModal">Edit</a>
+                                        <a class="btn btn-danger text-light" id="deleteRow"
+                                            data-id="{{ $category->id }}">Delete</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+
 
 
                         </tbody>
                     </table>
+
+                    {!! $categories->links() !!}
 
                 </div>
             </div>
@@ -147,7 +184,8 @@
 
 
                                             <div class="row mb-3">
-                                                <label for="name" class="col-sm-4 col-form-label">Category Name</label>
+                                                <label for="name" class="col-sm-4 col-form-label">Category
+                                                    Name</label>
                                                 <div class="col-sm-8">
                                                     <input class="form-control" type="text"
                                                         placeholder="Enter Your Category Name" id="e_name">
@@ -194,46 +232,62 @@
     <script>
         let url = window.location.origin
 
-        function table_data_row(data) {
-            var rows = '';
-            var i = 0;
-            $.each(data, function(key, value) {
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            let page = $(this).attr('href').split('page=')[1]
+            record(page)
+        })
 
-                rows = rows + '<tr>';
-                rows = rows + '<td>' + ++i + '</td>';
-                rows = rows + '<td>' + value.name + '</td>';
-                rows = rows + '<td>' + value.description + '</td>';
-
-                rows = rows + '<td data-id="' + value.id + '" class="text-center">';
-                if (value.publication_status == 1) {
-                    rows = rows + '<a class="btn btn-success text-light status" title="UnPublich" data-id="' + value
-                        .id + '" >Publich</a> ';
-                } else {
-                    rows = rows + '<a class="btn btn-warning text-light status"  title="Publich" data-id="' + value
-                        .id + '" >UnPublich</a> ';
+        function record(page) {
+            $.ajax({
+                url: "/admin/category/pagination?page=" + page,
+                success: function(res) {
+                    $('.table-data').html(res);
                 }
-                rows = rows + '</td>';
-
-
-                rows = rows + '<td data-id="' + value.id + '" class="text-center">';
-                rows = rows + '<a class="btn btn-info text-light" id="editCategory" data-id="' + value.id +
-                    '" data-bs-toggle="modal" data-bs-target="#editCategoryModal">Edit</a> ';
-                rows = rows + '<a class="btn btn-danger text-light"  id="deleteRow" data-id="' + value.id +
-                    '" >Delete</a> ';
-                rows = rows + '</td>';
-                rows = rows + '</tr>';
-            });
-            $("#tbody").html(rows);
+            })
         }
 
-        function getAllData() {
-            axios.get("{{ route('category.data') }}")
-                .then(function(res) {
-                    table_data_row(res.data)
-                    // console.log(res.data);
-                })
-        }
-        getAllData();
+        // function table_data_row(data) {
+        //     var rows = '';
+        //     var i = 0;
+        //     $.each(data, function(key, value) {
+
+        //         rows = rows + '<tr>';
+        //         rows = rows + '<td>' + ++i + '</td>';
+        //         rows = rows + '<td>' + value.name + '</td>';
+        //         rows = rows + '<td>' + value.description + '</td>';
+
+        //         rows = rows + '<td data-id="' + value.id + '" class="text-center">';
+        //         if (value.publication_status == 1) {
+        //             rows = rows + '<a class="btn btn-success text-light status" title="UnPublich" data-id="' + value
+        //                 .id + '" >Publich</a> ';
+        //         } else {
+        //             rows = rows + '<a class="btn btn-warning text-light status"  title="Publich" data-id="' + value
+        //                 .id + '" >UnPublich</a> ';
+        //         }
+        //         rows = rows + '</td>';
+
+
+        //         rows = rows + '<td data-id="' + value.id + '" class="text-center">';
+        //         rows = rows + '<a class="btn btn-info text-light" id="editCategory" data-id="' + value.id +
+        //             '" data-bs-toggle="modal" data-bs-target="#editCategoryModal">Edit</a> ';
+        //         rows = rows + '<a class="btn btn-danger text-light"  id="deleteRow" data-id="' + value.id +
+        //             '" >Delete</a> ';
+        //         rows = rows + '</td>';
+        //         rows = rows + '</tr>';
+        //     });
+        //     $("#tbody").html(rows);
+        // }
+
+
+        // function getAllData() {
+        //     axios.get("")
+        //         .then(function(res) {
+        //             table_data_row(res.data)
+        //             // console.log(res.data);
+        //         })
+        // }
+        // getAllData();
 
 
 
@@ -242,7 +296,7 @@
 
 
 
-        //store
+        // Store Category Data
         $('body').on('submit', '#addNewDataForm', function(e) {
             e.preventDefault();
 
@@ -253,19 +307,24 @@
                     description: $('#description').val(),
                 })
                 .then(function(response) {
-                    getAllData();
+                    // getAllData();
                     $('#name').val('');
                     $('#description').val('');
                     $('#error').text('');
                     $('#exampleModal').modal('toggle');
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Success...',
-                        text: 'Data save Successfully!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
+
+                    if (response.status == 200) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Success...',
+                            text: 'Data save Successfully!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        $('.table').load(location.href + ' .table')
+                    }
+
 
                 })
                 .catch(function(error) {
@@ -310,17 +369,21 @@
             let path = url + '/admin/category' + '/' + id
             axios.put(path, data)
                 .then(function(res) {
-                    getAllData();
+                    // getAllData();
                     $('#editCategoryModal').modal('toggle')
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Success...',
-                        text: 'Data Update Successfully!',
-                        showConfirmButton: false,
-                        timer: 1500
+                    if (res.status == 200) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Success...',
+                            text: 'Data Update Successfully!',
+                            showConfirmButton: false,
+                            timer: 1500
 
-                    })
+                        })
+                        $('.table').load(location.href + ' .table')
+                    }
+
 
                 })
         })
@@ -353,12 +416,16 @@
                 if (result.isConfirmed) {
 
                     axios.delete(`${url}/admin/category/${id}`).then(function(r) {
-                        getAllData();
-                        swalWithBootstrapButtons.fire(
-                            'Deleted!',
-                            'Your data has been deleted.',
-                            'success'
-                        )
+                        // getAllData();
+                        if (r.status == 200) {
+                            swalWithBootstrapButtons.fire(
+                                'Deleted!',
+                                'Your data has been deleted.',
+                                'success'
+                            )
+                            $('.table').load(location.href + ' .table')
+                        }
+
                     });
                 } else if (
                     /* Read more about handling dismissals below */
@@ -376,26 +443,60 @@
 
         // Publication Status
 
-        $('body').on('click', '.status', function() {
+        $('body').on('click', '.status', function(e) {
+            e.preventDefault();
             let id = $(this).data('id');
             let status = `${url}/admin/category-status/${id}`
             // console.log(url);
             axios.get(status)
 
                 .then(function(res) {
-                    getAllData();
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Success...',
-                        text: 'Data Update Successfully!',
-                        showConfirmButton: false,
-                        timer: 1500
 
-                    })
+                    if (res.status === 200) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Success...',
+                            text: 'Data Update Successfully!',
+                            showConfirmButton: false,
+                            timer: 1500
+
+                        })
+                        $('.table').load(location.href + ' .table')
+                    }
+
                 })
 
 
         })
+
+
+        // Search Category Data
+
+        $('#searchCategory').on('keyup',function(e) {
+            e.preventDefault();
+
+
+            $.ajax({
+                url: "{{ route('category.search') }}",
+                method: "GET",
+                data: {
+                    search_string:$('#searchCategory').val()
+                },
+                success: function(res) {
+
+                    if (res.status == 'no_data') {
+                        $('.table-data').html('<h1 class="text-danger text-center">' +
+                            'Nothing Data Found' + '</h1>')
+                    } else {
+                        $('.table-data').html(res);
+                    }
+
+                }
+            })
+        });
+
+
+
     </script>
 @endsection

@@ -1,7 +1,4 @@
 @php
-    $tasks1 = [];
-    $tasks2 = [];
-    $tasks3 = [];
 
     if ($tasks != null) {
         foreach ($tasks as $key => $task) {
@@ -91,11 +88,21 @@
                                     <tr>
                                         <td>{{ $i }}</td>
                                         <td>{{ $task->task_name }}</td>
-                                        <td>{{ $task->category['name'] }}</td>
+
+                                        <td>
+                                            @if ($task->category == null)
+                                                No Category
+                                            @else
+                                                {{ $task->category['name'] }}
+                                            @endif
+
+                                        </td>
+
                                         <td>{{ $task->task_description }}</td>
                                         <td>{{ $task->date }}</td>
                                         <td>{{ $task->start_time }}</td>
                                         <td>{{ $task->end_time }}</td>
+
                                         <td>
                                             @if ($task->process == '0')
                                                 <a class="btn btn-danger" title="Pending">Starting</a>
@@ -104,10 +111,8 @@
                                             @else
                                                 <a class="btn btn-success">Completed</a>
                                             @endif
-
-
-
                                         </td>
+
                                         <td>
                                             @if ($task->publication_status == '1')
                                                 <a class="btn btn-success" title="UnPublich">Publich</a>
@@ -169,7 +174,16 @@
                                     <tr>
                                         <td>{{ $i }}</td>
                                         <td>{{ $task->task_name }}</td>
-                                        <td>{{ $task->category['name'] }}</td>
+
+                                        <td>
+                                            @if ($task->category == null)
+                                                No Category
+                                            @else
+                                                {{ $task->category['name'] }}
+                                            @endif
+
+                                        </td>
+
                                         <td>{{ $task->task_description }}</td>
                                         <td>{{ $task->date }}</td>
                                         <td>{{ $task->start_time }}</td>
@@ -248,7 +262,16 @@
                                     <tr>
                                         <td>{{ $i }}</td>
                                         <td>{{ $task->task_name }}</td>
-                                        <td>{{ $task->category['name'] }}</td>
+
+                                        <td>
+                                            @if ($task->category == null)
+                                                No Category
+                                            @else
+                                                {{ $task->category['name'] }}
+                                            @endif
+
+                                        </td>
+
                                         <td>{{ $task->task_description }}</td>
                                         <td>{{ $task->date }}</td>
                                         <td>{{ $task->start_time }}</td>

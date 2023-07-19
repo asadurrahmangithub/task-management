@@ -322,7 +322,16 @@
                 rows = rows + '<tr class="text-center">';
                 rows = rows + '<td>' + ++i + '</td>';
                 rows = rows + '<td>' + value.blog_title + '</td>';
-                rows = rows + '<td>' + value.category.name + '</td>';
+
+                rows = rows + '<td>';
+                    if(value.category == null){
+                        rows = rows + 'No Category';
+                    }else{
+                        rows = rows + value.category.name;
+                    }
+
+                rows = rows + '</td>';
+
                 rows = rows + '<td>' + value.elm1 + '</td>';
                 rows = rows + '<td>' + value.date + '</td>';
                 rows = rows + '<td>' +
