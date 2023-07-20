@@ -13,13 +13,17 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::latest()->paginate(3);
-        return view('admin.category.manage-category',compact('categories'));
+        // $categories = Category::latest();
+        return view('admin.category.manage-category');
     }
 
-    // public function categoryData(){
-    //     return Category::latest()->limit(3)->get();
-    // }
+    public function categoryData(Request $request){
+        $limit = $request->input('limit',3);
+        $offset = $request->input('offset',0);
+        $data = Category::skip($offset)->take($limit)->get();
+
+        return response()->json($data);
+    }
 
 
     /**
@@ -115,13 +119,15 @@ class CategoryController extends Controller
     /******************** Category Data Search  ***************************/
 
     public function categorySearch(Request $request){
-        $categories = Category::where('name','like','%'.$request->search_string.'%')
-        ->orWhere('description','like','%'.$request->search_string.'%')
-        ->orderBy('id','desc')
-        ->paginate(3);
 
-        if($categories->count() >= 1){
-            return view('admin.category.pagination',compact('categories'))->render();
+        $keyword = $request->input('keyword');
+        $data = Category::where('name','like',"%$keyword%")
+        ->orWhere('description','like',"%$keyword%")
+        ->offset(0)->limit(3)
+        ->get();
+
+        if($data->count() >= 1){
+            return response()->json($data);
         }else{
             return response()->json([
                 "status" => "no_data",

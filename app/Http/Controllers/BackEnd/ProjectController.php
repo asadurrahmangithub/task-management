@@ -58,8 +58,11 @@ class ProjectController extends Controller
         return 'ok';
     }
 
-    public function projectDate(){
-        return Project::with('category')->latest()->get();
+    public function projectDate(Request $request){
+        $limit = $request->input('limit',2);
+        $offset = $request->input('offset',0);
+        $data = Project::with('category')->skip($offset)->take($limit)->get();
+        return response()->json($data);
     }
 
     /**
@@ -134,6 +137,25 @@ class ProjectController extends Controller
         }
         $project->save();
         return 'ok';
+    }
+
+    /******************** Category Data Search  ***************************/
+
+    public function projectSearch(Request $request){
+
+        $keyword = $request->input('keyword');
+        $data = Project::with('category')->where('project_name','like',"%$keyword%")
+        ->orWhere('project_description','like',"%$keyword%")
+        ->offset(0)->limit(2)
+        ->get();
+
+        if($data->count() >= 1){
+            return response()->json($data);
+        }else{
+            return response()->json([
+                "status" => "no_data",
+            ]);
+        }
     }
 }
 

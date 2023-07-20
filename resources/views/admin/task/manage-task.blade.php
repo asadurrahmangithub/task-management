@@ -27,20 +27,28 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="mt-4">Task Manage Table</h4>
-                            <button type="button" class="btn btn-success float-end" data-bs-toggle="modal"
-                                data-bs-target="#addTaskModal">
-                                Add Task Product
-                            </button>
-                    </div>
-                    @if (session()->has('massage'))
-                        <div class="alert alert-primary text-success text-center">
-                            <h2 class="text-success">{{ session()->get('massage') }}</h2>
+
+                        <div class="row">
+                            <div class="col-md-7">
+                                <h2 class="mt-4">All Task Project Manage Table</h2>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control mt-4" name="search" id="searchTaskProject"
+                                    placeholder="Search Here........">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-success mt-4 float-end" data-bs-toggle="modal"
+                                    data-bs-target="#addTaskModal">
+                                    Add Task Product
+                                </button>
+                            </div>
                         </div>
-                    @endif
+
+                    </div>
+
                     <div class="card-body">
 
-                        <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        <table class="table table-bordered dt-responsive nowrap"
                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                                 <tr>
@@ -62,6 +70,17 @@
 
                             </tbody>
                         </table>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                <li class="page-item active"><a class="page-link" id="prevPage"
+                                        onclick="prevPage()">Previous</a></li>
+                                {{-- <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li> --}}
+                                <li class="page-item active ms-3"><a class="page-link" onclick="nextPage()"
+                                        id="nextPage">Next</a></li>
+                            </ul>
+                        </nav>
 
                     </div>
                 </div>
@@ -285,16 +304,19 @@
     @section('js')
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
 
         <script>
             // View Project
 
             let url = window.location.origin
 
+            /*********************** Task Project All Data Show Function Start ********************************/
+
             function table_data_row(data) {
                 var rows = '';
                 var i = 0;
-                console.log(data);
+                // console.log(data);
                 $.each(data, function(key, value) {
 
                     rows = rows + '<tr>';
@@ -353,18 +375,83 @@
                 $("#tbody").html(rows);
             }
 
-            function getAllData() {
-                axios.get("{{ route('task.data') }}")
+            /*********************** Task Project Show Function End ********************************/
+
+            /*********************** Task Project Pagination Function Start ********************************/
+            let currentPage = 1;
+            const limit = 3;
+
+            function getAllData(offset) {
+                axios.get(`/admin/task-data?limit=${limit}&offset=${offset}`)
                     .then(function(res) {
-                        console.log(res.data);
+                        // console.log(res.data);
                         table_data_row(res.data)
+
+                        if (res.data.length != limit) {
+                            //
+                            document.getElementById("nextPage").style.display = "none";
+                        } else {
+                            document.getElementById("nextPage").style = "display";
+                        }
 
                     })
             }
-            getAllData();
+
+            function nextPage() {
+                const offset = currentPage * limit;
+                currentPage++;
+                getAllData(offset);
+            }
+
+            function prevPage() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    const offset = (currentPage - 1) * limit;
+                    getAllData(offset);
+                }
+            }
+            getAllData(0);
+
+            /*********************** Task Project Pagination Function End ********************************/
+
+            /*********************** Search Result Use Debounce ********************************/
+
+            $('#searchTaskProject').on('keyup', _.debounce(function(e) {
+                e.preventDefault();
+
+                const keyword = document.getElementById('searchTaskProject').value;
+
+                axios.get(`/admin/task-search?keyword=${keyword}`)
+                    .then(function(res) {
+                        // console.log(res.data);
+
+                        if (res.data.status == 'no_data') {
+                            $('#tbody').html('<h3 class="text-danger text-center">' + 'Nothing Data Found' +
+                                '</h3>')
+
+                        } else {
+                            table_data_row(res.data);
+                        }
+                        let nextPage = document.getElementById("nextPage");
+                        let prevPage = document.getElementById("prevPage");
+                        if (res.data.length == null) {
+                            //
+                            nextPage.style.display = "none";
+                            prevPage.style.display = "none";
+                        } else if (res.data.length != limit) {
+                            nextPage.style.display = "none";
+                        } else {
+                            nextPage.style = "display";
+                            prevPage.style = "display";
+                        }
+                    })
+
+            }, 2000));
+
+            /*********************** Search Result Debounce End ********************************/
 
 
-            //Store Project
+            /*********************** Task Project Store Function Start ********************************/
             $('body').on('submit', '#addTaskDataForm', function(e) {
                 e.preventDefault();
 
@@ -425,7 +512,9 @@
 
             });
 
-            // Edit Category
+            /*********************** Task Project Store Function End ********************************/
+
+            /*********************** Task Project Edit Function Start ********************************/
             $('body').on('click', '#editTaskProject', function() {
                 let id = $(this).data('id');
                 let edit = url + '/admin/task' + '/' + id + '/edit'
@@ -442,9 +531,9 @@
                         $('#e_id').val(res.data.id)
                     })
             })
+            /*********************** Task Project Edit Function End ********************************/
 
-            //Update Category
-
+            /*********************** Task Project Update Function Start ********************************/
             $('body').on('submit', '#editTaskProjectDataForm', function(e) {
                 e.preventDefault()
                 let id = $('#e_id').val()
@@ -474,8 +563,9 @@
 
                     })
             })
+            /*********************** Task Project Upadate Function End ********************************/
 
-            //Delete Project
+            /*********************** Task Project Delete Function Start ********************************/
             $('body').on('click', '#deleteRow', function(e) {
                 e.preventDefault();
                 let id = $(this).data('id')
@@ -518,9 +608,9 @@
                     }
                 })
             });
+            /*********************** Task Project Delete Function End ********************************/
 
-            // Publication Status
-
+            /*********************** Task Project Process Status Function Status ********************************/
             $('body').on('click', '.process', function() {
                 let id = $(this).data('id');
                 let process = `${url}/admin/task-process/${id}`
@@ -542,10 +632,10 @@
 
 
             })
+            /*********************** Task Project Process Status Function End ********************************/
 
 
-            // Publication Status
-
+            /*********************** Task Project Publication Status Function Start ********************************/
             $('body').on('click', '.status', function() {
                 let id = $(this).data('id');
                 let status = `${url}/admin/task-status/${id}`
@@ -564,9 +654,8 @@
 
                         })
                     })
-
-
             })
+            /*********************** Task Project Publication Status Function End ********************************/
         </script>
     @endsection
 

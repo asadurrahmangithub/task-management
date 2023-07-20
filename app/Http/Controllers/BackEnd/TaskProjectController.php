@@ -33,8 +33,12 @@ class TaskProjectController extends Controller
 
 
 
-    public function taskData(){
-        return TaskProject::with('category')->latest()->get();
+    public function taskData(Request $request){
+        $limit = $request->input('limit',3);
+        $offset = $request->input('offset',0);
+        $data = TaskProject::with('category')->skip($offset)->take($limit)->get();
+
+        return response()->json($data);
     }
 
     /**
@@ -137,5 +141,24 @@ class TaskProjectController extends Controller
         }
         $task->save();
         return 'ok';
+    }
+
+    /******************** Category Data Search  ***************************/
+
+    public function taskSearch(Request $request){
+
+        $keyword = $request->input('keyword');
+        $data = TaskProject::with('category')->where('task_name','like',"%$keyword%")
+        ->orWhere('task_description','like',"%$keyword%")
+        ->offset(0)->limit(3)
+        ->get();
+
+        if($data->count() >= 1){
+            return response()->json($data);
+        }else{
+            return response()->json([
+                "status" => "no_data",
+            ]);
+        }
     }
 }

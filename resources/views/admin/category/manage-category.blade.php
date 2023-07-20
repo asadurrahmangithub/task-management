@@ -61,7 +61,7 @@
 
                         <tbody id="tbody" class="text-center">
 
-                            @foreach ($categories as $key => $category)
+                            {{-- @foreach ($categories as $key => $category)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $category->name }}</td>
@@ -85,14 +85,29 @@
                                             data-id="{{ $category->id }}">Delete</a>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @endforeach --}}
 
 
 
                         </tbody>
                     </table>
 
-                    {!! $categories->links() !!}
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item active"><a class="page-link" id="prevPage"
+                                    onclick="prevPage()">Previous</a></li>
+                            {{-- <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li> --}}
+                            <li class="page-item active ms-3"><a class="page-link" onclick="nextPage()"
+                                    id="nextPage">Next</a></li>
+                        </ul>
+                    </nav>
+
+                    {{-- <
+                         --}}
+
+                    {{-- {!! $categories->links() !!} --}}
 
                 </div>
             </div>
@@ -207,6 +222,7 @@
 
 
 
+
                                     </div>
                                 </div>
                             </div> <!-- end col -->
@@ -229,74 +245,104 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
     <script>
         let url = window.location.origin
 
-        $(document).on('click', '.pagination a', function(e) {
-            e.preventDefault();
-            let page = $(this).attr('href').split('page=')[1]
-            record(page)
-        })
+        // $(document).on('click', '.pagination a', function(e) {
+        //     e.preventDefault();
+        //     let page = $(this).attr('href').split('page=')[1]
+        //     record(page)
+        // })
 
-        function record(page) {
-            $.ajax({
-                url: "/admin/category/pagination?page=" + page,
-                success: function(res) {
-                    $('.table-data').html(res);
+        // function record(page) {
+        //     $.ajax({
+        //         url: "/admin/category/pagination?page=" + page,
+        //         success: function(res) {
+        //             $('.table-data').html(res);
+        //         }
+        //     })
+        // }
+
+        /*********************** Category Data Show Function Start ********************************/
+
+        function table_data_row(data) {
+            var rows = '';
+            var i = 0;
+            $.each(data, function(key, value) {
+
+                rows = rows + '<tr>';
+                rows = rows + '<td>' + ++i + '</td>';
+                rows = rows + '<td>' + value.name + '</td>';
+                rows = rows + '<td>' + value.description + '</td>';
+
+                rows = rows + '<td data-id="' + value.id + '" class="text-center">';
+                if (value.publication_status == 1) {
+                    rows = rows + '<a class="btn btn-success text-light status" title="UnPublich" data-id="' + value
+                        .id + '" >Publich</a> ';
+                } else {
+                    rows = rows + '<a class="btn btn-warning text-light status"  title="Publich" data-id="' + value
+                        .id + '" >UnPublich</a> ';
                 }
-            })
+                rows = rows + '</td>';
+
+
+                rows = rows + '<td data-id="' + value.id + '" class="text-center">';
+                rows = rows + '<a class="btn btn-info text-light" id="editCategory" data-id="' + value.id +
+                    '" data-bs-toggle="modal" data-bs-target="#editCategoryModal">Edit</a> ';
+                rows = rows + '<a class="btn btn-danger text-light"  id="deleteRow" data-id="' + value.id +
+                    '" >Delete</a> ';
+                rows = rows + '</td>';
+                rows = rows + '</tr>';
+            });
+            $("#tbody").html(rows);
+        }
+        /*********************** Category Data Show Function End ********************************/
+
+
+        /*********************** Category Data Pagination Function Start ********************************/
+
+        let currentPage = 1;
+        const limit = 3;
+
+
+        function getAllData(offset) {
+            axios.get(`/admin/category-data?limit=${limit}&offset=${offset}`)
+                .then(function(res) {
+                    table_data_row(res.data)
+
+
+                    if (res.data.length != limit) {
+                        //
+                        document.getElementById("nextPage").style.display = "none";
+                    } else {
+                        document.getElementById("nextPage").style = "display";
+                    }
+                    //     console.log(res.data.length);
+                })
         }
 
-        // function table_data_row(data) {
-        //     var rows = '';
-        //     var i = 0;
-        //     $.each(data, function(key, value) {
+        function nextPage() {
+            const offset = currentPage * limit;
+            currentPage++;
+            getAllData(offset);
+        }
 
-        //         rows = rows + '<tr>';
-        //         rows = rows + '<td>' + ++i + '</td>';
-        //         rows = rows + '<td>' + value.name + '</td>';
-        //         rows = rows + '<td>' + value.description + '</td>';
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                const offset = (currentPage - 1) * limit;
+                getAllData(offset);
+            }
+        }
+        getAllData(0);
 
-        //         rows = rows + '<td data-id="' + value.id + '" class="text-center">';
-        //         if (value.publication_status == 1) {
-        //             rows = rows + '<a class="btn btn-success text-light status" title="UnPublich" data-id="' + value
-        //                 .id + '" >Publich</a> ';
-        //         } else {
-        //             rows = rows + '<a class="btn btn-warning text-light status"  title="Publich" data-id="' + value
-        //                 .id + '" >UnPublich</a> ';
-        //         }
-        //         rows = rows + '</td>';
-
-
-        //         rows = rows + '<td data-id="' + value.id + '" class="text-center">';
-        //         rows = rows + '<a class="btn btn-info text-light" id="editCategory" data-id="' + value.id +
-        //             '" data-bs-toggle="modal" data-bs-target="#editCategoryModal">Edit</a> ';
-        //         rows = rows + '<a class="btn btn-danger text-light"  id="deleteRow" data-id="' + value.id +
-        //             '" >Delete</a> ';
-        //         rows = rows + '</td>';
-        //         rows = rows + '</tr>';
-        //     });
-        //     $("#tbody").html(rows);
-        // }
-
-
-        // function getAllData() {
-        //     axios.get("")
-        //         .then(function(res) {
-        //             table_data_row(res.data)
-        //             // console.log(res.data);
-        //         })
-        // }
-        // getAllData();
+        /*********************** Category Data Pagination Function End ********************************/
 
 
 
 
-
-
-
-
-        // Store Category Data
+        /*********************** Category  Data Store Function Start ********************************/
         $('body').on('submit', '#addNewDataForm', function(e) {
             e.preventDefault();
 
@@ -337,26 +383,59 @@
                 });
 
         });
+        /*********************** Category Data Store Function End ********************************/
 
 
-        // Edit Category
+        /*********************** Category Data Edit Start ********************************/
         $('body').on('click', '#editCategory', function() {
-            let id = $(this).data('id');
-            let edit = url + '/admin/category' + '/' + id + '/edit'
-            // console.log(url);
-            axios.get(edit)
-                .then(function(res) {
-                    //    console.log(res);
-                    $('#e_name').val(res.data.name)
-                    $('#e_description').val(res.data.description)
-                    $('#e_id').val(res.data.id)
-                })
+
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-2',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Edit Info!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    let id = $(this).data('id');
+                    let edit = url + '/admin/category' + '/' + id + '/edit'
+                    // console.log(url);
+                    axios.get(edit)
+                        .then(function(res) {
+                            //    console.log(res);
+                            $('#e_name').val(res.data.name)
+                            $('#e_description').val(res.data.description)
+                            $('#e_id').val(res.data.id)
+                        })
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'Your file is safe :)',
+                        'error'
+                    ),
+                    $('#editCategoryModal').modal('toggle')
+                }
+            })
         })
+        /*********************** Category Data Edit End ********************************/
 
 
 
 
-        //Update Category
+        /*********************** Category Data Update Start ********************************/
 
         $('body').on('submit', '#updateCategoryDate', function(e) {
             e.preventDefault()
@@ -381,17 +460,18 @@
                             timer: 1500
 
                         })
-                        $('.table').load(location.href + ' .table')
+                        getAllData(0);
                     }
 
 
                 })
         })
 
+        /*********************** Category Data Update End ********************************/
 
-        //Delete Category
 
-        //delete currency
+        /*********************** Category Data Delete Function Start ********************************/
+
         $('body').on('click', '#deleteRow', function(e) {
             e.preventDefault();
             let id = $(this).data('id')
@@ -440,63 +520,126 @@
             })
         });
 
+        /*********************** Category Data Delete Function End ********************************/
 
-        // Publication Status
+
+        /*********************** Publication Status Start ********************************/
 
         $('body').on('click', '.status', function(e) {
             e.preventDefault();
             let id = $(this).data('id');
-            let status = `${url}/admin/category-status/${id}`
-            // console.log(url);
-            axios.get(status)
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-2',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Status Update!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
 
-                .then(function(res) {
+                if (result.isConfirmed) {
+                    let status = `${url}/admin/category-status/${id}`
+                    // console.log(url);
+                    axios.get(status)
+                        .then(function(res) {
 
-                    if (res.status === 200) {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Success...',
-                            text: 'Data Update Successfully!',
-                            showConfirmButton: false,
-                            timer: 1500
+                            if (res.status === 200) {
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'Success...',
+                                    text: 'Data Status Update Successfully!',
+                                    showConfirmButton: false,
+                                    timer: 1500
+
+                                })
+                                getAllData(0);
+                            }
 
                         })
-                        $('.table').load(location.href + ' .table')
-                    }
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'Your file is safe :)',
+                        'error'
+                    )
+                }
 
-                })
-
+            })
 
         })
 
+        /*********************** Publication Status End ********************************/
 
-        // Search Category Data
 
-        $('#searchCategory').on('keyup',function(e) {
+        /*********************** Search Result Use Debounce ********************************/
+
+        $('#searchCategory').on('keyup', _.debounce(function(e) {
             e.preventDefault();
 
+            const keyword = document.getElementById('searchCategory').value;
 
-            $.ajax({
-                url: "{{ route('category.search') }}",
-                method: "GET",
-                data: {
-                    search_string:$('#searchCategory').val()
-                },
-                success: function(res) {
+            axios.get(`/admin/category-search?keyword=${keyword}`)
+                .then(function(res) {
+                    // console.log(res.data);
 
-                    if (res.status == 'no_data') {
-                        $('.table-data').html('<h1 class="text-danger text-center">' +
-                            'Nothing Data Found' + '</h1>')
+                    if (res.data.status == 'no_data') {
+                        $('#tbody').html('<h1 class="text-danger text-center">' + 'Nothing Data Found' +
+                            '</h1>')
+
                     } else {
-                        $('.table-data').html(res);
+                        table_data_row(res.data);
                     }
 
-                }
-            })
-        });
+                    let nextPage = document.getElementById("nextPage");
+                    let prevPage = document.getElementById("prevPage");
+                    if (res.data.length == null) {
+                        //
+                        nextPage.style.display = "none";
+                        prevPage.style.display = "none";
+                    } else if (res.data.length != limit) {
+                        nextPage.style.display = "none";
+                    } else {
+                        nextPage.style = "display";
+                        prevPage.style = "display";
+                    }
+                })
 
+            /*********************** Search Result To Many Time ********************************/
 
+            // $.ajax({
+            //     url: ,
+            //     method: "GET",
+            //     data: {
+            //         search_string: $('#searchCategory').val()
+            //     },
+            //     success: function(res) {
+            //         table_data_row(res.data)
 
+            //         if (res.status == 'no_data') {
+            //             $('.table-data').html('<h1 class="text-danger text-center">' +
+            //                 'Nothing Data Found' + '</h1>')
+            //         } else {
+            //             $('.table-data').html(res);
+            //         }
+
+            //     }
+            // })
+            /*********************** Search Result To Many Time End ********************************/
+
+        }, 2000));
+
+        /*********************** Search Result Debounce End ********************************/
     </script>
 @endsection

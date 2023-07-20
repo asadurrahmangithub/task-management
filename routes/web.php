@@ -47,8 +47,8 @@ Route::middleware(['disableBackBtn'])->group(function () {
         Route::resource('category', CategoryController::class);
         Route::get('/category-status/{id}', [CategoryController::class, 'categoryStatus'])->name('category.status');
         Route::get('/category-search', [CategoryController::class, 'categorySearch'])->name('category.search');
-        // Route::get('/category-data', [CategoryController::class, 'categoryData'])->name('category.data');
-        Route::get('/category/pagination/{id}', [CategoryController::class, 'show'])->name('category.data');
+        Route::get('/category-data', [CategoryController::class, 'categoryData'])->name('category.data');
+        // Route::get('/category/pagination/{id}', [CategoryController::class, 'show'])->name('category.data');
         // ********************* Category All Route End ******************
 
 
@@ -56,6 +56,7 @@ Route::middleware(['disableBackBtn'])->group(function () {
         Route::resource('project', ProjectController::class);
         Route::get('/project-status/{id}', [ProjectController::class, 'projectStatus'])->name('project.status');
         Route::get('/project-process/{id}', [ProjectController::class, 'projectProcess'])->name('project.process');
+        Route::get('/project-search', [ProjectController::class, 'projectSearch'])->name('project.search');
         Route::get('/project-data', [ProjectController::class, 'projectDate'])->name('project.data');
         // ********************* Project All Route End ******************
 
@@ -64,6 +65,7 @@ Route::middleware(['disableBackBtn'])->group(function () {
         Route::resource('task', TaskProjectController::class);
         Route::get('/task-status/{id}', [TaskProjectController::class, 'taskStatus'])->name('task.status');
         Route::get('/task-process/{id}', [TaskProjectController::class, 'taskProcess'])->name('task.process');
+        Route::get('/task-search', [TaskProjectController::class, 'taskSearch'])->name('task.search');
         Route::get('/task-data', [TaskProjectController::class, 'taskData'])->name('task.data');
         // ********************* Task Project All Route End ******************
 

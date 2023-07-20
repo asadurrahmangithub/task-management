@@ -23,20 +23,27 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="mt-4">All Project Manage Table</h4>
-                        <button type="button" class="btn btn-success float-end" data-bs-toggle="modal"
-                            data-bs-target="#addProjectModal">
-                            Add Product
-                        </button>
-                </div>
-                @if (session()->has('massage'))
-                    <div class="alert alert-primary text-success text-center">
-                        <h2 class="text-success">{{ session()->get('massage') }}</h2>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h2 class="mt-4">All Project Manage Table</h2>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control mt-4" name="search" id="searchProject"
+                                placeholder="Search Here........">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-success mt-4 float-end" data-bs-toggle="modal"
+                                data-bs-target="#addProjectModal">
+                                Add Project
+                            </button>
+                        </div>
                     </div>
-                @endif
+
+                </div>
+
                 <div class="card-body">
 
-                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                    <table class="table table-bordered dt-responsive nowrap"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
@@ -58,6 +65,17 @@
 
                         </tbody>
                     </table>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item active"><a class="page-link" id="prevPage"
+                                    onclick="prevPage()">Previous</a></li>
+                            {{-- <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li> --}}
+                            <li class="page-item active ms-3"><a class="page-link" onclick="nextPage()"
+                                    id="nextPage">Next</a></li>
+                        </ul>
+                    </nav>
 
                 </div>
             </div>
@@ -164,8 +182,8 @@
 
 
     <!-- Modal Add Project-->
-    <div class="modal fade " id="editProjectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-        style="width: 100%">
+    <div class="modal fade " id="editProjectModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" style="width: 100%">
         <div class="modal-dialog modal-dialog-centered modal-fullscreen-lg-down modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -258,16 +276,18 @@
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
 
     <script>
         // View Project
 
         let url = window.location.origin
 
+        /*********************** Project All Data Show Start ********************************/
         function table_data_row(data) {
             var rows = '';
             var i = 0;
-            console.log(data);
+            // console.log(data);
             $.each(data, function(key, value) {
 
                 rows = rows + '<tr>';
@@ -283,7 +303,7 @@
 
                 rows = rows + '</td>';
 
-                
+
                 rows = rows + '<td>' + value.project_description + '</td>';
                 rows = rows + '<td>' + value.start_date + '</td>';
                 rows = rows + '<td>' + value.submit_date + '</td>';
@@ -324,17 +344,83 @@
             });
             $("#tbody").html(rows);
         }
+        /*********************** Project Pagination Function End ********************************/
 
-        function getAllData() {
-            axios.get("{{ route('project.data') }}")
+        /*********************** Project Pagination Start ********************************/
+
+
+        let currentPage = 1;
+        const limit = 2;
+
+        function getAllData(offset) {
+            axios.get(`/admin/project-data?limit=${limit}&offset=${offset}`)
                 .then(function(res) {
                     table_data_row(res.data)
-                    // console.log(res.data);
+                    if (res.data.length != limit) {
+
+                        document.getElementById("nextPage").style.display = "none";
+                    } else {
+                        document.getElementById("nextPage").style = "display";
+                    }
+
                 })
         }
-        getAllData();
 
-        //Store Project
+        function nextPage() {
+            const offset = currentPage * limit;
+            currentPage++;
+            getAllData(offset);
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                const offset = (currentPage - 1) * limit;
+                getAllData(offset);
+            }
+        }
+        getAllData(0);
+        /*********************** Project Pagination Function End ********************************/
+
+        /*********************** Search Result Use Debounce ********************************/
+
+        $('#searchProject').on('keyup', _.debounce(function(e) {
+            e.preventDefault();
+
+            const keyword = document.getElementById('searchProject').value;
+
+            axios.get(`/admin/project-search?keyword=${keyword}`)
+                .then(function(res) {
+
+
+                    if (res.data.status == 'no_data') {
+                        $('#tbody').html('<h3 class="text-danger text-center align-center">' +
+                            'Nothing Data Found' +
+                            '</h3>')
+
+                    } else {
+                        table_data_row(res.data);
+                    }
+                    let nextPage = document.getElementById("nextPage");
+                    let prevPage = document.getElementById("prevPage");
+                    if (res.data.length == null) {
+                        //
+                        nextPage.style.display = "none";
+                        prevPage.style.display = "none";
+                    } else if (res.data.length != limit) {
+                        nextPage.style.display = "none";
+                    } else {
+                        nextPage.style = "display";
+                        prevPage.style = "display";
+                    }
+                })
+
+
+        }, 2000));
+
+        /*********************** Search Result Debounce End ********************************/
+
+        /*********************** Store Project Data Start Function ********************************/
         $('body').on('submit', '#addProjectDataForm', function(e) {
             e.preventDefault();
 
@@ -389,9 +475,10 @@
                 });
 
         });
+        /*********************** Project Store Function End ********************************/
 
 
-        // Edit Category
+        /*********************** Project Edit Function Start ********************************/
         $('body').on('click', '#editProject', function() {
             let id = $(this).data('id');
             let edit = url + '/admin/project' + '/' + id + '/edit'
@@ -408,7 +495,9 @@
                 })
         })
 
-        //Update Category
+        /*********************** Project Edit Function End ********************************/
+
+        /*********************** Project Updata Function Start ********************************/
 
         $('body').on('submit', '#updateProjectDataForm', function(e) {
             e.preventDefault()
@@ -439,7 +528,9 @@
                 })
         })
 
-        //Delete Project
+        /*********************** Project Update Function End ********************************/
+
+        /*********************** Project Delete Function Start ********************************/
         $('body').on('click', '#deleteRow', function(e) {
             e.preventDefault();
             let id = $(this).data('id')
@@ -483,8 +574,10 @@
             })
         });
 
+        /*********************** Project Delete Function End ********************************/
 
-        // Publication Status
+
+        /*********************** Project Publication Status Function Start ********************************/
 
         $('body').on('click', '.status', function() {
             let id = $(this).data('id');
@@ -505,11 +598,12 @@
                     })
                 })
 
-
         })
 
+        /*********************** Project Publication Status Function End ********************************/
 
-        // Process Status
+
+        /*********************** Project Process Status Function Start ********************************/
 
         $('body').on('click', '.process', function() {
             let id = $(this).data('id');
@@ -529,8 +623,7 @@
 
                     })
                 })
-
-
         })
+        /*********************** Project Process Status Function End ********************************/
     </script>
 @endsection
