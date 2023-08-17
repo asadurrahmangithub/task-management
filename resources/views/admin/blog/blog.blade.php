@@ -18,26 +18,33 @@
             </div>
         </div>
     </div>
+
     <!-- end page title -->
 
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="mt-4">Blog Manage Table</h4>
-                        <button type="button" class="btn btn-success float-end" data-bs-toggle="modal"
-                            data-bs-target="#addBlogModal">
-                            Add New Blog
-                        </button>
-                </div>
-                @if (session()->has('massage'))
-                    <div class="alert alert-primary text-success text-center">
-                        <h2 class="text-success">{{ session()->get('massage') }}</h2>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h2 class="mt-4">Blog Manage Table</h2>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control mt-4" name="search" id="searchBlog"
+                                placeholder="Search Here........">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-success mt-4 float-end" data-bs-toggle="modal"
+                                data-bs-target="#addBlogModal">
+                                Add New Blog
+                            </button>
+                        </div>
                     </div>
-                @endif
+                </div>
+
                 <div class="card-body">
 
-                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                    <table class="table table-bordered dt-responsive nowrap"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr class="text-center">
@@ -45,13 +52,16 @@
                                 <th>Blog Title</th>
                                 <th>Category</th>
                                 <th>Description</th>
-                                <th>Date</th>
+
                                 <th>Image</th>
                                 <th>Author</th>
-                                <th>Process</th>
+
+                                <th>Publish Status</th>
+
                                 @if ($username == 'admin' || $username == 'developer')
                                     <th>Status</th>
                                 @endif
+                                <th>Published At</th>
                                 <th>Action</th>
 
                             </tr>
@@ -61,6 +71,17 @@
 
                         </tbody>
                     </table>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item active"><a class="page-link btn btn-primary" id="prevPage"
+                                    onclick="prevPage()">Previous</a></li>
+                            {{-- <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li> --}}
+                            <li class="page-item active ms-3"><a class="page-link btn btn-primary" onclick="nextPage()"
+                                    id="nextPage">Next</a></li>
+                        </ul>
+                    </nav>
 
                 </div>
             </div>
@@ -130,14 +151,16 @@
                                         </div>
 
                                         <!-- end row -->
-                                        <div class="row mb-3">
+
+
+                                        {{-- <div class="row mb-3">
                                             <label class="col-sm-2 col-form-label">Date</label>
                                             <div class="col-sm-10">
                                                 <input class="form-control" name="date" id="date"
                                                     value="{{ old('date') }}" type="date">
                                                 <span class="text-danger error4"></span>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
 
                                         <!-- end row -->
@@ -146,8 +169,8 @@
                                                 for="basic-default-name">Image</label>
                                             <div class="col-sm-3">
                                                 <div class="input-group">
-                                                    <img id="image" src="" alt=""
-                                                        accept="image/jpeg, image/png"
+                                                    <img id="image" src="{{ url('upload/no_image.png') }}"
+                                                        alt="" accept="image/jpeg, image/png"
                                                         style="height: 150px; width: 150px" />
                                                 </div>
                                             </div>
@@ -161,13 +184,17 @@
                                             </div>
                                         </div>
 
+                                        {{-- @php
+                                            dd($username);
+                                        @endphp --}}
+
 
                                         <div class="row mb-3">
                                             <label for="author" class="col-sm-2 col-form-label">Author
                                                 Name</label>
                                             <div class="col-sm-10">
                                                 <input class="form-control" name="author" id="author" type="text"
-                                                    value="{{ old('author') }}" placeholder="Enter Your Blog Author Name">
+                                                    value="{{ $username }}" placeholder="Enter Your Blog Author Name" disabled>
                                                 <span class="text-danger error1"></span>
                                             </div>
                                         </div>
@@ -252,14 +279,15 @@
                                         </div>
 
                                         <!-- end row -->
-                                        <div class="row mb-3">
+
+                                        {{-- <div class="row mb-3">
                                             <label class="col-sm-2 col-form-label">Date</label>
                                             <div class="col-sm-10">
                                                 <input class="form-control" id="u_date" name="date"
                                                     type="date">
                                                 <span class="text-danger error4"></span>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
 
                                         <!-- end row -->
@@ -287,7 +315,7 @@
                                                 Name</label>
                                             <div class="col-sm-10">
                                                 <input class="form-control" name="author" id="u_author" type="text"
-                                                    placeholder="Enter Your Blog Author Name">
+                                                value="{{ $username }}" placeholder="Enter Your Blog Author Name" disabled>
                                                 <span class="text-danger error1"></span>
                                             </div>
                                         </div>
@@ -310,44 +338,50 @@
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
 
     <script>
         // View Blog Data
         let url = window.location.origin;
 
         function allBlogData(data) {
+            // console.log(data);
             var rows = '';
             var i = 0;
+
             $.each(data, function(key, value) {
                 rows = rows + '<tr class="text-center">';
                 rows = rows + '<td>' + ++i + '</td>';
                 rows = rows + '<td>' + value.blog_title + '</td>';
 
                 rows = rows + '<td>';
-                    if(value.category == null){
-                        rows = rows + 'No Category';
-                    }else{
-                        rows = rows + value.category.name;
-                    }
+                if (value.category == null) {
+                    rows = rows + 'No Category';
+                } else {
+                    rows = rows + value.category;
+                }
 
                 rows = rows + '</td>';
 
-                rows = rows + '<td>' + value.elm1 + '</td>';
-                rows = rows + '<td>' + value.date + '</td>';
+                rows = rows + '<td style="width: 40%;">' + value.elm1 + '</td>';
+
                 rows = rows + '<td>' +
                     `<img src="{{ asset('` + value.image +`') }}"  style="height: 50px; width: 50px" />` + '</td>';
                 rows = rows + '<td>' + value.author + '</td>';
 
                 rows = rows + '<td data-id="' + value.id + '" class="text-center">';
                 if (value.process == 0) {
-                    rows = rows + '<a class="btn btn-danger text-light process" title="Pending" data-id="' + value
-                        .id + '" >Start</a> ';
-                } else if (value.process == 1) {
-                    rows = rows + '<a class="btn btn-info text-light process"  title="Completed" data-id="' + value
-                        .id + '" >Pending</a> ';
-                } else {
-                    rows = rows + '<a class="btn btn-success text-light process"  title="Start" data-id="' + value
-                        .id + '" >Completed</a> ';
+                    rows = rows + '<a class="text-danger" title="Publish" data-id="' + value
+                        .id + '" >Draft</a> ';
+                }
+
+                // else if (value.process == 1) {
+                //     rows = rows + '<a class="btn btn-info text-light process"  title="Completed" data-id="' + value
+                //         .id + '" >Publish</a> ';
+                // }
+                else {
+                    rows = rows + '<a class="text-success"  title="Start" data-id="' + value
+                        .id + '" >Publish</a> ';
                 }
 
                 rows = rows + '</td>';
@@ -355,19 +389,22 @@
                 @if ($username == 'admin' || $username == 'developer')
                     rows = rows + '<td data-id="' + value.id + '" class="text-center">';
                     if (value.publication_status == 1) {
-                        rows = rows + '<a class="btn btn-success text-light status" title="UnPublich" data-id="' +
+                        rows = rows + '<a class="btn btn-success text-light status" title="Unpublish" data-id="' +
                             value
-                            .id + '" >Publich</a> ';
+                            .id + '" >Publish</a> ';
                     } else {
-                        rows = rows + '<a class="btn btn-warning text-light status"  title="Publich" data-id="' +
+                        rows = rows + '<a class="btn btn-warning text-light status"  title="Publish" data-id="' +
                             value
-                            .id + '" >UnPublich</a> ';
+                            .id + '" >Unpublish</a> ';
                     }
                     rows = rows + '</td>';
                 @endif
 
 
-                rows = rows + '<td data-id="' + value.id + '" class="text-center">';
+                rows = rows + '<td>' + value.date + '</td>';
+
+
+                rows = rows + '<td data-id="' + value.id + '" class="text-center" style="width: 10%;">';
                 @if ($username == 'admin')
                     rows = rows + '<a class="btn btn-info text-light" id="editBlogInfo" data-id="' + value.id +
                         '" data-bs-toggle="modal" data-bs-target="#updateBlogModal">Edit</a> ';
@@ -375,13 +412,27 @@
                         '" >Delete</a> ';
                 @elseif ($username == 'user')
 
+                    if (value.process == 0) {
+                        rows = rows + '<a class="btn btn-danger text-light process" title="Publish" data-id="' + value
+                            .id + '" >Draft</a> ';
+                    }
+
+                    // else if (value.process == 1) {
+                    //     rows = rows + '<a class="btn btn-info text-light process"  title="Completed" data-id="' + value
+                    //         .id + '" >Publish</a> ';
+                    // }
+                    else {
+                        rows = rows + '<a class="btn btn-success text-light process"  title="Start" data-id="' + value
+                            .id + '" >Publish</a> ';
+                    }
+
                     if (value.publication_status == 0) {
                         rows = rows + '<a class="btn btn-info text-light" id="editBlogInfo" data-id="' + value.id +
                             '" data-bs-toggle="modal" data-bs-target="#updateBlogModal">Edit</a> ';
                         rows = rows + '<a class="btn btn-danger text-light"  id="deleteRow" data-id="' + value.id +
                             '" >Delete</a> ';
                     } else {
-                        rows = rows + '<a class="btn btn-warning text-light">No Action</a> ';
+                        rows = rows + '<a class="badge bg-warning text-light">No Action</a> ';
                     }
                 @endif
 
@@ -394,15 +445,79 @@
             $("#tbody").html(rows);
         }
 
-        function getAllBlog() {
-            axios.get("{{ route('blog.index') }}")
+
+        let currentPage = 1;
+        const limit = 3;
+
+        function getAllBlog(offset) {
+            axios.get(`/admin/blog?limit=${limit}&offset=${offset}`)
                 .then(function(response) {
                     allBlogData(response.data)
+
+                    if (response.data.length != limit) {
+                        //
+                        document.getElementById("nextPage").style.display = "none";
+                    } else {
+                        document.getElementById("nextPage").style = "display";
+                    }
+                    //     console.log(res.data.length);
                 })
         }
-        getAllBlog();
+
+        function nextPage() {
+            const offset = currentPage * limit;
+            currentPage++;
+            getAllBlog(offset);
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                const offset = (currentPage - 1) * limit;
+                getAllBlog(offset);
+            }
+        }
+        getAllBlog(0);
 
         /**************** Store Blog Page **********************/
+
+        /*********************** Search Result Use Debounce ********************************/
+
+        $('#searchBlog').on('keyup', _.debounce(function(e) {
+            e.preventDefault();
+
+            const keyword = document.getElementById('searchBlog').value;
+
+            axios.get(`/admin/blog-search?keyword=${keyword}`)
+                .then(function(res) {
+                    // console.log(res.data);
+
+                    if (res.data.status == 'no_data') {
+                        $('#tbody').html('<h3 class="text-danger text-center align-center">' +
+                            'Nothing Data Found' +
+                            '</h3>')
+
+                    } else {
+                        allBlogData(res.data);
+                    }
+
+                    let nextPage = document.getElementById("nextPage");
+                    let prevPage = document.getElementById("prevPage");
+                    if (res.data.length == null) {
+                        //
+                        nextPage.style.display = "none";
+                        prevPage.style.display = "none";
+                    } else if (res.data.length != limit) {
+                        nextPage.style.display = "none";
+                    } else {
+                        nextPage.style = "display";
+                        prevPage.style = "display";
+                    }
+                })
+
+        }, 2000));
+
+        /*********************** Search Result Debounce End ********************************/
 
         $(function() {
 
@@ -499,7 +614,8 @@
                     $('#u_blog_title').val(res.data.blog_title)
                     $('#u_category_id').val(res.data.category_id)
                     $('#u_description').val(res.data.elm1)
-                    $('#u_date').val(res.data.date)
+
+                    // $('#u_date').val(res.data.date)
 
                     $('#u_author').val(res.data.author)
                     $('#u_id').val(res.data.id)
@@ -609,7 +725,6 @@
                     }
 
                 })
-
 
         })
     </script>

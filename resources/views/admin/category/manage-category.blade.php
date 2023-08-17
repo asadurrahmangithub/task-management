@@ -595,8 +595,8 @@
                     // console.log(res.data);
 
                     if (res.data.status == 'no_data') {
-                        $('#tbody').html('<h1 class="text-danger text-center">' + 'Nothing Data Found' +
-                            '</h1>')
+                        $('#tbody').html('<h3 class="text-danger text-center align-center">' + 'Nothing Data Found' +
+                            '</h3>')
 
                     } else {
                         table_data_row(res.data);

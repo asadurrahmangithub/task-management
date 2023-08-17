@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\BackEnd;
 
+use Carbon\Carbon;
+
 use App\Models\Blog;
+use App\Models\User;
+
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Requests\BlogRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 
 class BlogController extends Controller
@@ -14,9 +19,43 @@ class BlogController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Blog::with('category')->latest()->get();
+
+        $username = Auth::user()->username;
+
+        // return response()->json($username);
+
+        $limit = $request->input('limit', 3);
+        $offset = $request->input('offset',0);
+
+        if($username !== "admin"){
+            $data = Blog::where('other',Auth::id())->with('category')->skip($offset)->take($limit)->get();
+        }else{
+            $data = Blog::with('category')->skip($offset)->take($limit)->get();
+        }
+
+        $formattedData = $data->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'blog_title' => $item->blog_title,
+                'category' => $item->category->name,
+                'date' => Carbon::createFromFormat('Y-m-d H:i:s', $item->date)->format('l, F j, Y g:i A'),
+                'process' => $item->process,
+                'image' => $item->image,
+                'publication_status' => $item->publication_status,
+                'elm1' => $item->elm1,
+                'author' => $item->author,
+
+
+
+                // other attributes...
+            ];
+        });
+
+        return response()->json($formattedData);
+
+        // return Blog::with('category')->latest()->get();
     }
 
     /**
@@ -35,17 +74,23 @@ class BlogController extends Controller
      */
     public function store(BlogRequest $request)
     {
+        $username = Auth::user()->username;
+
         $validatedData = $request->validated();
 
         $blog = new Blog();
         $blog->blog_title = $validatedData['blog_title'];
         $blog->category_id = $validatedData['category_id'];
         $blog->elm1 = $validatedData['elm1'];
-        $blog->date = $validatedData['date'];
-        $blog->author = $validatedData['author'];
+        // $blog->date = $validatedData['date'];
+        $blog->author = $username;
+
         if ($request->file('image')) {
             $blog->image = $this->blogImage($request);
         }
+
+        $blog->other = Auth::id();
+
 
         // return  $blog->image;
         $blog->save();
@@ -88,14 +133,19 @@ class BlogController extends Controller
      */
     public function update(BlogRequest $request)
     {
+        // $username = Auth::user()->username;
+
         $validatedData = $request->validated();
 
         $blog = Blog::findorfail($request->u_id);
         $blog->blog_title = $validatedData['blog_title'];
         $blog->category_id = $validatedData['category_id'];
         $blog->elm1 = $validatedData['elm1'];
-        $blog->date = $validatedData['date'];
-        $blog->author = $validatedData['author'];
+
+        // $blog->date = $validatedData['date'];
+
+        // $blog->author = $username;
+
         if ($request->hasFile('image')){
             if ($request->file('image')) {
                 if (file_exists($blog->image)) {
@@ -129,26 +179,33 @@ class BlogController extends Controller
     }
 
     public function blogStatus($id){
+
         $blog = Blog::findorfail($id);
+
         if ($blog->publication_status == 1){
             $blog->publication_status = 0;
+            $blog->date = Carbon::now()->setTimezone('Asia/Dhaka')->format('Y-m-d H:i:s');
         }
         else{
             $blog->publication_status = 1;
+            $blog->date = Carbon::now()->setTimezone('Asia/Dhaka')->format('Y-m-d H:i:s');
         }
         $blog->save();
         return response()->json([
             "status" => 200
         ]);
     }
+
     public function blogProcess($id){
+
         $blog = Blog::findorfail($id);
+
         if ($blog->process == 0){
             $blog->process = 1;
         }
-        elseif($blog->process == 1){
-            $blog->process = 2;
-        }
+        // elseif($blog->process == 1){
+        //     $blog->process = 2;
+        // }
         else{
             $blog->process = 0;
         }
@@ -156,5 +213,23 @@ class BlogController extends Controller
         return response()->json([
             "status" => 200,
         ]);
+    }
+
+    /******************** Search Blog Function ************************/
+
+    public function blogSearch(Request $request){
+        $keyword = $request->input('keyword');
+        $data = Blog::with('category')->where('blog_title','like',"%$keyword%")
+                ->offset(0)->limit(3)->get();
+
+        if($data->count() >= 1){
+            return response()->json($data);
+        }else{
+            return response()->json([
+                "status" => "no_data",
+            ]);
+        }
+
+
     }
 }

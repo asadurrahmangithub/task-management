@@ -25,9 +25,9 @@ class BlogRequest extends FormRequest
             'blog_title' => 'required',
             'category_id' => 'nullable',
             'elm1' => 'required',
-            'date' => 'required',
+            'date' => 'nullable',
             'image' => 'nullable',
-            'author' => 'required',
+            'author' => 'nullable',
         ];
     }
 }

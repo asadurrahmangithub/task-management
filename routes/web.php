@@ -14,9 +14,16 @@ use App\Http\Controllers\BackEnd\RoleController;
 use App\Http\Controllers\TestController;
 
 
+
 Route::controller(FrontEndController::class)->group(function () {
     Route::get('/', 'index')->name('index');
+    Route::get('/blog', 'index');
+    Route::get('/contact', 'index');
+    Route::get('/listing-page', 'index');
+
+    Route::get('/blog-details/{id}', 'blogDetails')->name('blog.details');
 });
+
 
 
 // Route::middleware('auth')->group(function () {
@@ -79,6 +86,8 @@ Route::middleware(['disableBackBtn'])->group(function () {
         Route::resource('blog', BlogController::class);
         Route::get('/blog-status/{id}', [BlogController::class, 'blogStatus'])->name('blog.status');
         Route::get('/blog-process/{id}', [BlogController::class, 'blogProcess'])->name('blog.process');
+        Route::get('/blog-search', [BlogController::class, 'blogSearch'])->name('blog.search');
+
         // ********************* Blog All Route End ******************
 
 

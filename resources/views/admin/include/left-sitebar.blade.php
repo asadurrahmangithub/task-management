@@ -22,6 +22,7 @@
 
 
             {{-- @if ($username == 'admin' || $username == 'developer') --}}
+
                 <li class="menu-title">Menu</li>
 
                 <li>
@@ -30,6 +31,7 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
+                
             {{-- @endif --}}
 
 
