@@ -25,7 +25,7 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="mt-4">Role & Permission Manage Table</h4>
-                        <button type="button" class="btn btn-success float-end" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-sm btn-success float-end" data-bs-toggle="modal"
                             data-bs-target="#permissionModal">
                             Add Category
                         </button>
@@ -216,9 +216,9 @@
                 rows = rows + '<td>' + value.group_name + '</td>';
 
                 rows = rows + '<td data-id="' + value.id + '" class="text-center">';
-                rows = rows + '<a class="btn btn-info text-light" id="editPermission" data-id="' + value.id +
+                rows = rows + '<a class="btn btn-sm btn-info text-light" id="editPermission" data-id="' + value.id +
                     '" data-bs-toggle="modal" data-bs-target="#permissionModal">Edit</a> ';
-                rows = rows + '<a class="btn btn-danger text-light"  id="deleteRow" data-id="' + value.id +
+                rows = rows + '<a class="btn btn-sm btn-danger text-light"  id="deleteRow" data-id="' + value.id +
                     '" >Delete</a> ';
                 rows = rows + '</td>';
                 rows = rows + '</tr>';

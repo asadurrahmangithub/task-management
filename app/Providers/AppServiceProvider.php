@@ -31,7 +31,9 @@ class AppServiceProvider extends ServiceProvider
 
         $profile = Profile::first();
         view()->share('profile', $profile);
-        Paginator::useBootstrap();
+
+
+        // Paginator::useBootstrap();
         // view()->share('username', $username);
     }
 

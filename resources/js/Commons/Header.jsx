@@ -1,26 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import Logo from '../../../public/frontEnd/images/pod-talk-logo.png';
 
-const Header = () => {
+
+const Header = ({ onSearch }) => {
+
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const handleSearch = () => {
+        onSearch(searchQuery);
+    };
+
     return (
         <nav className="navbar navbar-expand-lg">
             <div className="container">
                 <Link className="navbar-brand me-lg-5 me-0" to="/">
-                    <img src={Logo} className="logo-image img-fluid" alt="templatemo pod talk"/>
+                    <img src={Logo} className="logo-image img-fluid" alt="templatemo pod talk" />
                 </Link>
 
-                <form action="#" method="get" className="custom-form search-form flex-fill me-3" role="search">
+                <div className="custom-form search-form flex-fill me-3">
                     <div className="input-group input-group-lg">
-                        <input name="search" type="search" className="form-control" id="search" placeholder="Search Podcast"
-                            aria-label="Search"/>
+                        <input name="search" type="search" className="form-control" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search Blog......."
+                            aria-label="Search" />
 
-                        <button type="submit" className="form-control" id="submit">
+                        <button onClick={handleSearch} className="form-control" id="submit">
                             <i className="bi-search"></i>
                         </button>
                     </div>
-                </form>
+                </div>
 
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

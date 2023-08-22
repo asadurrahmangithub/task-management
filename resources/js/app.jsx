@@ -4,7 +4,7 @@ import { createInertiaApp } from '@inertiajs/inertia-react'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 
 import Footer from './Commons/Footer'
-import Header from './Commons/Header'
+
 import { BrowserRouter } from 'react-router-dom'
 
 createInertiaApp({
@@ -14,10 +14,10 @@ createInertiaApp({
         createRoot(el).render(
 
             <BrowserRouter>
-                <main>
-                    <Header />
+                <>
+
                     <App {...props} />
-                </main>
+                </>
 
                 <Footer />
             </BrowserRouter>

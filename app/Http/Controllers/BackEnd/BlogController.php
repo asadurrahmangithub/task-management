@@ -36,21 +36,40 @@ class BlogController extends Controller
         }
 
         $formattedData = $data->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'blog_title' => $item->blog_title,
-                'category' => $item->category->name,
-                'date' => Carbon::createFromFormat('Y-m-d H:i:s', $item->date)->format('l, F j, Y g:i A'),
-                'process' => $item->process,
-                'image' => $item->image,
-                'publication_status' => $item->publication_status,
-                'elm1' => $item->elm1,
-                'author' => $item->author,
+            if($item->date != null){
+                return [
+                    'id' => $item->id,
+                    'blog_title' => $item->blog_title,
+                    'category' => $item->category->name,
+                    'date' => Carbon::createFromFormat('Y-m-d H:i:s', $item->date)->format('l, F j, Y g:i A'),
+                    'process' => $item->process,
+                    'image' => $item->image,
+                    'publication_status' => $item->publication_status,
+                    'elm1' => $item->elm1,
+                    'author' => $item->author,
 
 
 
-                // other attributes...
-            ];
+                    // other attributes...
+                ];
+            }else{
+                return [
+                    'id' => $item->id,
+                    'blog_title' => $item->blog_title,
+                    'category' => $item->category->name,
+                    'date' => 'null',
+                    'process' => $item->process,
+                    'image' => $item->image,
+                    'publication_status' => $item->publication_status,
+                    'elm1' => $item->elm1,
+                    'author' => $item->author,
+
+
+
+                    // other attributes...
+                ];
+            }
+
         });
 
         return response()->json($formattedData);

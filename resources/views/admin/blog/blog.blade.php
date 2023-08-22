@@ -34,7 +34,7 @@
                                 placeholder="Search Here........">
                         </div>
                         <div class="col-md-2">
-                            <button type="button" class="btn btn-success mt-4 float-end" data-bs-toggle="modal"
+                            <button type="button" class="btn btn-sm btn-success mt-4 float-end" data-bs-toggle="modal"
                                 data-bs-target="#addBlogModal">
                                 Add New Blog
                             </button>
@@ -44,42 +44,46 @@
 
                 <div class="card-body">
 
-                    <table class="table table-bordered dt-responsive nowrap"
-                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                        <thead>
-                            <tr class="text-center">
-                                <th>SL No</th>
-                                <th>Blog Title</th>
-                                <th>Category</th>
-                                <th>Description</th>
+                    <div class="table-responsive">
 
-                                <th>Image</th>
-                                <th>Author</th>
+                        <table class="table table-bordered dt-responsive nowrap"
+                            style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr class="text-center">
+                                    <th>SL No</th>
+                                    <th>Blog Title</th>
+                                    <th>Category</th>
+                                    <th>Description</th>
 
-                                <th>Publish Status</th>
+                                    <th>Image</th>
+                                    <th>Author</th>
 
-                                @if ($username == 'admin' || $username == 'developer')
-                                    <th>Status</th>
-                                @endif
-                                <th>Published At</th>
-                                <th>Action</th>
+                                    <th>Publish Status</th>
 
-                            </tr>
-                        </thead>
-                        <tbody id="tbody">
+                                    @if ($username == 'admin' || $username == 'developer')
+                                        <th>Status</th>
+                                    @endif
+                                    <th>Published At</th>
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="tbody">
 
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                        
+                    </div>
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
-                            <li class="page-item active"><a class="page-link btn btn-primary" id="prevPage"
+                            <li class="page-item active"><a class="page-link btn btn-sm btn-primary" id="prevPage"
                                     onclick="prevPage()">Previous</a></li>
                             {{-- <li class="page-item"><a class="page-link" href="#">1</a></li>
                             <li class="page-item"><a class="page-link" href="#">2</a></li>
                             <li class="page-item"><a class="page-link" href="#">3</a></li> --}}
-                            <li class="page-item active ms-3"><a class="page-link btn btn-primary" onclick="nextPage()"
-                                    id="nextPage">Next</a></li>
+                            <li class="page-item active ms-3"><a class="page-link btn btn-sm btn-primary"
+                                    onclick="nextPage()" id="nextPage">Next</a></li>
                         </ul>
                     </nav>
 
@@ -194,7 +198,8 @@
                                                 Name</label>
                                             <div class="col-sm-10">
                                                 <input class="form-control" name="author" id="author" type="text"
-                                                    value="{{ $username }}" placeholder="Enter Your Blog Author Name" disabled>
+                                                    value="{{ $username }}" placeholder="Enter Your Blog Author Name"
+                                                    disabled>
                                                 <span class="text-danger error1"></span>
                                             </div>
                                         </div>
@@ -315,7 +320,8 @@
                                                 Name</label>
                                             <div class="col-sm-10">
                                                 <input class="form-control" name="author" id="u_author" type="text"
-                                                value="{{ $username }}" placeholder="Enter Your Blog Author Name" disabled>
+                                                    value="{{ $username }}" placeholder="Enter Your Blog Author Name"
+                                                    disabled>
                                                 <span class="text-danger error1"></span>
                                             </div>
                                         </div>
@@ -389,11 +395,13 @@
                 @if ($username == 'admin' || $username == 'developer')
                     rows = rows + '<td data-id="' + value.id + '" class="text-center">';
                     if (value.publication_status == 1) {
-                        rows = rows + '<a class="btn btn-success text-light status" title="Unpublish" data-id="' +
+                        rows = rows +
+                            '<a class="btn btn-sm btn-success text-light status" title="Unpublish" data-id="' +
                             value
                             .id + '" >Publish</a> ';
                     } else {
-                        rows = rows + '<a class="btn btn-warning text-light status"  title="Publish" data-id="' +
+                        rows = rows +
+                            '<a class="btn btn-sm btn-warning text-light status"  title="Publish" data-id="' +
                             value
                             .id + '" >Unpublish</a> ';
                     }
@@ -401,19 +409,34 @@
                 @endif
 
 
-                rows = rows + '<td>' + value.date + '</td>';
+                rows = rows + '<td>';
+
+                if (value.date == "null") {
+                    rows = rows + '<a class="badge bg-warning text-light">Unpublished</a> ';
+                } else {
+                    rows = rows + value.date;
+                }
+
+                rows = rows + '</td>';
 
 
-                rows = rows + '<td data-id="' + value.id + '" class="text-center" style="width: 10%;">';
+                // rows = rows + '<td>' + value.date + '</td>';
+
+
+                rows = rows + '<td data-id="' + value.id + '" class="text-center" style="width: 18%;">';
+
                 @if ($username == 'admin')
-                    rows = rows + '<a class="btn btn-info text-light" id="editBlogInfo" data-id="' + value.id +
+                    rows = rows + '<a class="btn btn-sm btn-info text-light" id="editBlogInfo" data-id="' + value
+                        .id +
                         '" data-bs-toggle="modal" data-bs-target="#updateBlogModal">Edit</a> ';
-                    rows = rows + '<a class="btn btn-danger text-light"  id="deleteRow" data-id="' + value.id +
+                    rows = rows + '<a class="btn btn-sm btn-danger text-light"  id="deleteRow" data-id="' + value
+                        .id +
                         '" >Delete</a> ';
                 @elseif ($username == 'user')
 
                     if (value.process == 0) {
-                        rows = rows + '<a class="btn btn-danger text-light process" title="Publish" data-id="' + value
+                        rows = rows +
+                            '<a class="btn btn-sm btn-danger text-light process" title="Publish" data-id="' + value
                             .id + '" >Draft</a> ';
                     }
 
@@ -422,14 +445,17 @@
                     //         .id + '" >Publish</a> ';
                     // }
                     else {
-                        rows = rows + '<a class="btn btn-success text-light process"  title="Start" data-id="' + value
+                        rows = rows +
+                            '<a class="btn btn-sm btn-success text-light process"  title="Start" data-id="' + value
                             .id + '" >Publish</a> ';
                     }
 
                     if (value.publication_status == 0) {
-                        rows = rows + '<a class="btn btn-info text-light" id="editBlogInfo" data-id="' + value.id +
+                        rows = rows + '<a class="btn btn-sm btn-info text-light" id="editBlogInfo" data-id="' +
+                            value.id +
                             '" data-bs-toggle="modal" data-bs-target="#updateBlogModal">Edit</a> ';
-                        rows = rows + '<a class="btn btn-danger text-light"  id="deleteRow" data-id="' + value.id +
+                        rows = rows + '<a class="btn btn-sm btn-danger text-light"  id="deleteRow" data-id="' +
+                            value.id +
                             '" >Delete</a> ';
                     } else {
                         rows = rows + '<a class="badge bg-warning text-light">No Action</a> ';

@@ -42,4 +42,11 @@ class FrontEndController extends Controller
 
         return Inertia::render('Master');
     }
+
+
+    public function blogSearch(Request $request){
+        $query = $request->get('q');
+        $results = Blog::where([['blog_title','like',"%$query%"],['publication_status',1],['process',1]])->get();
+        return response()->json($results);
+    }
 }

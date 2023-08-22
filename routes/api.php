@@ -25,4 +25,6 @@ Route::controller(FrontEndController::class)->group(function () {
     Route::get('/blog-data', 'showData')->name('show.blog');
 
     Route::get('/blog-details/{id}', 'blogDetailsApi')->name('blog.details.api');
+
+    Route::get('/blog-search','blogSearch')->name('blog.search');
 });

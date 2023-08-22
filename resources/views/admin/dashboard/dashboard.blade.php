@@ -105,19 +105,19 @@
 
                                         <td>
                                             @if ($task->process == '0')
-                                                <a class="btn btn-danger" title="Pending">Starting</a>
+                                                <a class="btn btn-sm btn-danger" title="Pending">Starting</a>
                                             @elseif($task->process == '1')
-                                                <a class="btn btn-info" title="Completed">Pending</a>
+                                                <a class="btn btn-sm btn-info" title="Completed">Pending</a>
                                             @else
-                                                <a class="btn btn-success">Completed</a>
+                                                <a class="btn btn-sm btn-success">Completed</a>
                                             @endif
                                         </td>
 
                                         <td>
                                             @if ($task->publication_status == '1')
-                                                <a class="btn btn-success" title="UnPublich">Publich</a>
+                                                <a class="btn btn-sm btn-success" title="UnPublich">Publich</a>
                                             @else
-                                                <a class="btn btn-warning" title="Publich">UnPublich</a>
+                                                <a class="btn btn-sm btn-warning" title="Publich">UnPublich</a>
                                             @endif
 
                                         </td>
@@ -190,11 +190,11 @@
                                         <td>{{ $task->end_time }}</td>
                                         <td>
                                             @if ($task->process == '0')
-                                                <a class="btn btn-danger" title="Pending">Starting</a>
+                                                <a class="btn btn-sm btn-danger" title="Pending">Starting</a>
                                             @elseif($task->process == '1')
-                                                <a class="btn btn-info" title="Completed">Pending</a>
+                                                <a class="btn btn-sm btn-info" title="Completed">Pending</a>
                                             @else
-                                                <a class="btn btn-success">Completed</a>
+                                                <a class="btn btn-sm btn-success">Completed</a>
                                             @endif
 
 
@@ -202,9 +202,9 @@
                                         </td>
                                         <td>
                                             @if ($task->publication_status == '1')
-                                                <a class="btn btn-success" title="UnPublich">Publich</a>
+                                                <a class="btn btn-sm btn-success" title="UnPublich">Publich</a>
                                             @else
-                                                <a class="btn btn-warning" title="Publich">UnPublich</a>
+                                                <a class="btn btn-sm btn-warning" title="Publich">UnPublich</a>
                                             @endif
 
                                         </td>
@@ -279,13 +279,13 @@
                                         <td>
                                             @if ($task->process == '0')
                                                 <a href="{{ route('task.process', ['id' => $task->id]) }}"
-                                                    class="btn btn-danger" title="Pending">Starting</a>
+                                                    class="btn btn-sm btn-danger" title="Pending">Starting</a>
                                             @elseif($task->process == '1')
                                                 <a href="{{ route('task.process', ['id' => $task->id]) }}"
-                                                    class="btn btn-info" title="Completed">Pending</a>
+                                                    class="btn btn-sm btn-info" title="Completed">Pending</a>
                                             @else
                                                 <a href="{{ route('task.process', ['id' => $task->id]) }}"
-                                                    class="btn btn-success">Completed</a>
+                                                    class="btn btn-sm btn-success">Completed</a>
                                             @endif
 
 
@@ -294,10 +294,10 @@
                                         <td>
                                             @if ($task->publication_status == '1')
                                                 <a href="{{ route('task.status', ['id' => $task->id]) }}"
-                                                    class="btn btn-success" title="UnPublich">Publich</a>
+                                                    class="btn btn-sm btn-success" title="UnPublich">Publich</a>
                                             @else
                                                 <a href="{{ route('task.status', ['id' => $task->id]) }}"
-                                                    class="btn btn-warning" title="Publich">UnPublich</a>
+                                                    class="btn btn-sm btn-warning" title="Publich">UnPublich</a>
                                             @endif
 
                                         </td>

@@ -32,7 +32,7 @@
                                 placeholder="Search Here........">
                         </div>
                         <div class="col-md-2">
-                            <button type="button" class="btn btn-success mt-4 float-end" data-bs-toggle="modal"
+                            <button type="button" class="btn btn-sm btn-success mt-4 float-end" data-bs-toggle="modal"
                                 data-bs-target="#addProjectModal">
                                 Add Project
                             </button>
@@ -67,12 +67,12 @@
                     </table>
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
-                            <li class="page-item active"><a class="page-link" id="prevPage"
+                            <li class="page-item active"><a class="page-link btn btn-sm btn-primary" id="prevPage"
                                     onclick="prevPage()">Previous</a></li>
                             {{-- <li class="page-item"><a class="page-link" href="#">1</a></li>
                             <li class="page-item"><a class="page-link" href="#">2</a></li>
                             <li class="page-item"><a class="page-link" href="#">3</a></li> --}}
-                            <li class="page-item active ms-3"><a class="page-link" onclick="nextPage()"
+                            <li class="page-item active ms-3"><a class="page-link btn btn-sm btn-primary" onclick="nextPage()"
                                     id="nextPage">Next</a></li>
                         </ul>
                     </nav>
@@ -311,13 +311,13 @@
 
                 rows = rows + '<td data-id="' + value.id + '" class="text-center">';
                 if (value.process == 0) {
-                    rows = rows + '<a class="btn btn-danger text-light process" title="Pending" data-id="' + value
+                    rows = rows + '<a class="btn btn-sm btn-danger text-light process" title="Pending" data-id="' + value
                         .id + '" >Start</a> ';
                 } else if (value.process == 1) {
-                    rows = rows + '<a class="btn btn-info text-light process"  title="Completed" data-id="' + value
+                    rows = rows + '<a class="btn btn-sm btn-info text-light process"  title="Completed" data-id="' + value
                         .id + '" >Pending</a> ';
                 } else {
-                    rows = rows + '<a class="btn btn-success text-light process"  title="Start" data-id="' + value
+                    rows = rows + '<a class="btn btn-sm btn-success text-light process"  title="Start" data-id="' + value
                         .id + '" >Completed</a> ';
                 }
                 rows = rows + '</td>';
@@ -325,19 +325,19 @@
 
                 rows = rows + '<td data-id="' + value.id + '" class="text-center">';
                 if (value.publication_status == 1) {
-                    rows = rows + '<a class="btn btn-success text-light status" title="UnPublich" data-id="' + value
-                        .id + '" >Publich</a> ';
+                    rows = rows + '<a class="btn btn-sm btn-success text-light status" title="UnPublish" data-id="' + value
+                        .id + '" >Publish</a> ';
                 } else {
-                    rows = rows + '<a class="btn btn-warning text-light status"  title="Publich" data-id="' + value
-                        .id + '" >UnPublich</a> ';
+                    rows = rows + '<a class="btn btn-sm btn-warning text-light status"  title="Publish" data-id="' + value
+                        .id + '" >UnPublish</a> ';
                 }
                 rows = rows + '</td>';
 
 
                 rows = rows + '<td data-id="' + value.id + '" class="text-center">';
-                rows = rows + '<a class="btn btn-info text-light" id="editProject" data-id="' + value.id +
+                rows = rows + '<a class="btn btn-sm btn-info text-light" id="editProject" data-id="' + value.id +
                     '" data-bs-toggle="modal" data-bs-target="#editProjectModal">Edit</a> ';
-                rows = rows + '<a class="btn btn-danger text-light"  id="deleteRow" data-id="' + value.id +
+                rows = rows + '<a class="btn btn-sm btn-danger text-light"  id="deleteRow" data-id="' + value.id +
                     '" >Delete</a> ';
                 rows = rows + '</td>';
                 rows = rows + '</tr>';
