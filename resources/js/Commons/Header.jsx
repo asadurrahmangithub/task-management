@@ -11,6 +11,7 @@ const Header = ({ onSearch }) => {
     const handleSearch = () => {
         onSearch(searchQuery);
     };
+    
 
     return (
         <nav className="navbar navbar-expand-lg">
